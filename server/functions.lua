@@ -214,7 +214,7 @@ SetInterval(1, 600000, Core.SavePlayers)
 
 ESX.GetPlayers = function()
 	local sources = {}
-	for k in pairs(Core.Players) do
+	for k in pairs(ESX.Players) do
 		sources[#sources+1] = k
 	end
 	return sources
@@ -222,7 +222,7 @@ end
 
 ESX.GetExtendedPlayers = function(key, val)
 	local xPlayers = {}
-	for _, v in pairs(Core.Players) do
+	for _, v in pairs(ESX.Players) do
 		if key then
 			if (key == 'job' and v.job.name == val) or v[key] == val or v.variables[key] == val then
 				xPlayers[#xPlayers+1] = v
@@ -235,11 +235,11 @@ ESX.GetExtendedPlayers = function(key, val)
 end
 
 ESX.GetPlayerFromId = function(source)
-	return Core.Players[tonumber(source)]
+	return ESX.Players[tonumber(source)]
 end
 
 ESX.GetPlayerFromIdentifier = function(identifier)
-	for _,v in pairs(Core.Players) do
+	for _,v in pairs(ESX.Players) do
 		if v.identifier == identifier then
 			return v
 		end
@@ -271,7 +271,7 @@ ESX.GetItemLabel = function(item)
 end
 
 ESX.GetJobs = function()
-	return Core.Jobs
+	return ESX.Jobs
 end
 
 ESX.GetUsableItems = function()
@@ -283,7 +283,7 @@ ESX.GetUsableItems = function()
 end
 
 ESX.DoesJobExist = function(job, grade)
-	if job and grade and Core.Jobs[job]?.grades[tonumber(grade)] then
+	if job and grade and ESX.Jobs[job]?.grades[tonumber(grade)] then
 		return true
 	end
 	return false

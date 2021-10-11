@@ -6,7 +6,7 @@ ESX.OneSync.Players = function(playerId, closest, coords, distance)
 	local playerPed = playerId and GetPlayerPed(playerId)
 	if closest ~= nil then coords = type(coords) == 'number' and GetEntityCoords(GetPlayerPed(coords)) or vector3(coords.x, coords.y, coords.z) end
 
-	for _, xPlayer in pairs(Core.Players) do
+	for _, xPlayer in pairs(ESX.Players) do
 		if xPlayer.source ~= playerId then
 			if closest ~= nil then
 				table.insert(players, {id = xPlayer.source, ped = GetPlayerPed(xPlayer.source)})

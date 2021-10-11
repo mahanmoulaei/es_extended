@@ -1,11 +1,11 @@
 ESX = {}
+ESX.Jobs = {}
+ESX.Players = {}
 Core = {}
-Core.Players = {}
 Core.UsableItemsCallbacks = {}
 Core.ServerCallbacks = {}
 Core.TimeoutCount = -1
 Core.CancelledTimeouts = {}
-Core.Jobs = {}
 Core.RegisteredCommands = {}
 
 AddEventHandler('esx:getSharedObject', function(cb)
@@ -19,22 +19,22 @@ end)
 Core.LoadJobs = function()
 	exports.oxmysql:execute('SELECT * FROM jobs', {}, function(jobs)
 		for _, v in pairs(jobs) do
-			Core.Jobs[v.name] = v
-			Core.Jobs[v.name].grades = {}
+			ESX.Jobs[v.name] = v
+			ESX.Jobs[v.name].grades = {}
 		end
 
 		exports.oxmysql:execute('SELECT * FROM job_grades', {}, function(grades)
 			for _, v in pairs(grades) do
-				if Core.Jobs[v.job_name] then
-					Core.Jobs[v.job_name].grades[v.grade] = v
+				if ESX.Jobs[v.job_name] then
+					ESX.Jobs[v.job_name].grades[v.grade] = v
 				else
 					print(('[^3WARNING^7] Ignoring job grades for ^5"%s"^0 due to missing job'):format(v.job_name))
 				end
 			end
 
-			for _, v in pairs(Core.Jobs) do
+			for _, v in pairs(ESX.Jobs) do
 				if ESX.Table.SizeOf(v.grades) == 0 then
-					Core.Jobs[v.name] = nil
+					ESX.Jobs[v.name] = nil
 					print(('[^3WARNING^7] Ignoring job ^5"%s"^0due to no job grades found'):format(v.name))
 				end
 			end
@@ -58,7 +58,7 @@ RegisterServerEvent('esx:triggerServerCallback', function(name, requestId, ...)
 end)
 
 SetInterval(1, Config.PaycheckInterval, function()
-	for _, xPlayer in pairs(Core.Players) do
+	for _, xPlayer in pairs(ESX.Players) do
 		local job     = xPlayer.job.grade_name
 		local salary  = xPlayer.job.grade_salary
 		if salary > 0 then

@@ -13,7 +13,7 @@ end)
 
 if Config.Multichar then
 	AddEventHandler('esx:onPlayerJoined', function(src, char, data)
-		if not Core.Players[src] then
+		if not ESX.Players[src] then
 			local identifier = char..':'..ESX.GetIdentifier(src)
 			if data then
 				createESXPlayer(identifier, src, data)
@@ -24,7 +24,7 @@ if Config.Multichar then
 	end)
 else
 	RegisterServerEvent('esx:onPlayerJoined', function()
-		if not Core.Players[source] then
+		if not ESX.Players[source] then
 			onPlayerJoined(source)
 		end
 	end)
@@ -135,11 +135,11 @@ function loadESXPlayer(identifier, playerId, isNew)
 
 		-- Job
 		if ESX.DoesJobExist(job, grade) then
-			jobObject, gradeObject = Core.Jobs[job], Core.Jobs[job].grades[grade]
+			jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
 		else
 			print(('[^3WARNING^7] Ignoring invalid job for %s [job: %s, grade: %s]'):format(identifier, job, grade))
 			job, grade = 'unemployed', 0
-			jobObject, gradeObject = Core.Jobs[job], Core.Jobs[job].grades[grade]
+			jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
 		end
 
 		userData.job.id = jobObject.id
@@ -200,7 +200,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 
 		-- Create xPlayer object
 		local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.group, userData.accounts, userData.job, userData.playerName, userData.coords)
-		Core.Players[playerId] = xPlayer
+		ESX.Players[playerId] = xPlayer
 
 		if userData.firstname then
 			xPlayer.set('firstName', userData.firstname)
@@ -245,7 +245,7 @@ local Logout = function(playerId)
 		ExecuteCommand(('remove_principal player.%s group.%s'):format(xPlayer.source, xPlayer.job.name))
 
 		Core.SavePlayer(xPlayer, function()
-			Core.Players[playerId] = nil
+			ESX.Players[playerId] = nil
 		end)
 	end
 end

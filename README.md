@@ -1,10 +1,19 @@
-<h1 align='center'>ESX Legacy - Overextended</a></h1><p align='center'><b>Experimental Branch</b></p>
+<h1 align='center'>ESX Legacy - Overextended</a></h1>
 
-##### We'll be testing some features here. Anything that adds features or changes functionality will _not_ be added to main. I recommend looking through commits or reading the code to find changes, and either cherry-picking what you want to use or taking it as is.
+##### The Overextended fork provides compatibility for Ox Inventory, several enhancements, features, and bug fixes.
+- Removes garbage tables from the ESX table that is normally transferred to other resources and never referenced.
+- Removes the async resource which creates unncessary threads.
+- Upgrade from mysql-async to oxmysql.
+- Enables CfxLua 5.4 and fxv2 oal.
+- Replaces several outdated functions with natives or language functions.
+- Adds support for registering commands for jobs `(ESX.RegisterCommand('police'))`
+- Adds several server-side OneSync only functions
 
 #### Known compatibility issues
-- Any resources that attempt to reference `ESX.Players` or `ESX.Jobs` will throw errors.
-	- Use `ESX.GetExtendedPlayers()` and `ESX.GetJobs()` instead
+- There are no known compatibility issues aside from those caused by Ox Inventory.  
+- Refer to [this page](https://overextended.github.io/ox_inventory/#installation) for more information.  
+- If you encounter an issue then [post the relevant information](https://github.com/overextended/es_extended/issues/new).  
+
 
 <br><br><br><br><br><br><h1 align='center'>ESX Legacy</a></h1><p align='center'><b><a href='https://discord.gg/cNx6HF9P5J'>Development Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://discord.gg/J6VqFPwvVp'>Support Discord</a></b></h5>
 

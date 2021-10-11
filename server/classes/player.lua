@@ -221,8 +221,9 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
 	end
 
 	self.setJob = function(job, grade)
+		grade = tonumber(grade)
 		if ESX.DoesJobExist(job, grade) then
-			
+
 			if self.job.name ~= job then
 				ExecuteCommand(('remove_principal player.%s group.%s'):format(self.source, self.job.name))
 			end
@@ -234,7 +235,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
 			self.job.name  = jobObject.name
 			self.job.label = jobObject.label
 
-			self.job.grade        = tonumber(grade)
+			self.job.grade        = grade
 			self.job.grade_name   = gradeObject.name
 			self.job.grade_label  = gradeObject.label
 			self.job.grade_salary = gradeObject.salary

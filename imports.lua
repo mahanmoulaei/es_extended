@@ -4,18 +4,17 @@ ESX = exports['es_extended']:getSharedObject()
 ------------------------------------------------------------------------
 local Intervals = {}
 SetInterval = function(id, msec, callback, onclear)
-	if Intervals[id] and msec then
+	if not Intervals[id] and msec then
 		Intervals[id] = msec
-	else
 		CreateThread(function()
-			Intervals[id] = msec
 			repeat
-				Wait(Intervals[id])
-				callback(Intervals[id])
-			until Intervals[id] == -1 and (onclear and onclear() or true)
+				local interval = Intervals[id]
+				Wait(interval)
+				callback(interval)
+			until interval == -1 and (onclear and onclear() or true)
 			Intervals[id] = nil
 		end)
-	end
+	elseif msec then Intervals[id] = msec end
 end
 
 ClearInterval = function(id)

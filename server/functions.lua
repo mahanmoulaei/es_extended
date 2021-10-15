@@ -250,7 +250,8 @@ ESX.GetIdentifier = function(playerId)
 	local identifier = Config.Identifier..':'
 	for _, v in pairs(GetPlayerIdentifiers(playerId)) do
 		if string.match(v, identifier) then
-			return string.gsub(v, identifier, '')
+			identifier = string.gsub(v, identifier, '')
+			return identifier
 		end
 	end
 end

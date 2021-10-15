@@ -17,28 +17,29 @@ exports('getSharedObject', function()
 end)
 
 Core.LoadJobs = function()
+	local Jobs = {}
 	exports.oxmysql:execute('SELECT * FROM jobs', {}, function(jobs)
 		for _, v in pairs(jobs) do
-			ESX.Jobs[v.name] = v
-			ESX.Jobs[v.name].grades = {}
+			Jobs[v.name] = v
+			Jobs[v.name].grades = {}
 		end
 
 		exports.oxmysql:execute('SELECT * FROM job_grades', {}, function(grades)
 			for _, v in pairs(grades) do
-				if ESX.Jobs[v.job_name] then
-					ESX.Jobs[v.job_name].grades[v.grade] = v
+				if Jobs[v.job_name] then
+					Jobs[v.job_name].grades[v.grade] = v
 				else
 					print(('[^3WARNING^7] Ignoring job grades for ^5"%s"^0 due to missing job'):format(v.job_name))
 				end
 			end
 
-			for _, v in pairs(ESX.Jobs) do
+			for _, v in pairs(Jobs) do
 				if ESX.Table.SizeOf(v.grades) == 0 then
-					ESX.Jobs[v.name] = nil
+					Jobs[v.name] = nil
 					print(('[^3WARNING^7] Ignoring job ^5"%s"^0due to no job grades found'):format(v.name))
 				end
 			end
-			print('[^2INFO^7] ESX ^5Legacy^0 initialized')
+			ESX.Jobs = table.clone(Jobs)
 		end)
 	end)
 end
@@ -92,3 +93,4 @@ SetInterval(1, Config.PaycheckInterval, function()
 end)
 
 Core.LoadJobs()
+print('[^2INFO^7] ESX ^5Legacy^0 initialized')

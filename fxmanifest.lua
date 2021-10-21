@@ -3,7 +3,6 @@ game 'gta5'
 description 'Overextended'
 version 'legacy'
 lua54 'yes'
-use_fxv2_oal 'yes'
 
 shared_scripts {
 	'locale.lua',

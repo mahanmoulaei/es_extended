@@ -152,7 +152,7 @@ Core.TriggerServerCallback = function(name, requestId, source, cb, ...)
 end
 
 Core.SavePlayer = function(xPlayer, cb)
-	exports.oxmysql:update("UPDATE users SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ? WHERE `identifier` = ?", {
+	exports.oxmysql:prepare("UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ? WHERE `identifier` = ?", {{
 		json.encode(xPlayer.getAccounts(true)),
 		xPlayer.job.name,
 		xPlayer.job.grade,
@@ -160,7 +160,7 @@ Core.SavePlayer = function(xPlayer, cb)
 		json.encode(xPlayer.getCoords()),
 		json.encode(xPlayer.getInventory(true)),
 		xPlayer.identifier
-	}, function(affectedRows)
+	}}, function(affectedRows)
 		if affectedRows == 1 then
 			print(('[^2INFO^7] Saved player ^5"%s^7"'):format(xPlayer.name))
 		end
@@ -170,42 +170,26 @@ end
 
 Core.SavePlayers = function(cb)
 	local xPlayers = ESX.GetExtendedPlayers()
-	if #xPlayers > 0 then
-		local time = os.time()
-
-		local selectListWithNames = "SELECT '%s' AS identifier, '%s' AS new_accounts, '%s' AS new_job, %s AS new_job_grade, '%s' AS new_group, '%s' AS new_position, '%s' AS new_inventory "
-		local selectListNoNames = "SELECT '%s', '%s', '%s' , %s, '%s', '%s', '%s', '%s' "
-
-		local updateCommand = 'UPDATE users u JOIN ('
-
-		local selectList = selectListNoNames
-		local first = true
-		for _, xPlayer in pairs(xPlayers) do
-			if first == false then
-				updateCommand = updateCommand .. ' UNION '
-			else
-				selectList = selectListWithNames
-			end
-
-			updateCommand = updateCommand .. string.format(selectList,
-				xPlayer.identifier,
+	local count = #xPlayers
+	if count > 0 then
+		local parameters = {}
+		local time = os.nanotime()
+		for i=1, count do
+			local xPlayer = xPlayers[i]
+			parameters[#parameters+1] = {
 				json.encode(xPlayer.getAccounts(true)),
 				xPlayer.job.name,
 				xPlayer.job.grade,
 				xPlayer.group,
 				json.encode(xPlayer.getCoords()),
-				json.encode(xPlayer.getInventory(true))
-			)
-
-			first = false
+				json.encode(xPlayer.getInventory(true)),
+				xPlayer.identifier
+			}
 		end
-
-		updateCommand = updateCommand .. ' ) vals ON u.identifier = vals.identifier SET accounts = new_accounts, job = new_job, job_grade = new_job_grade, `group` = new_group, `position` = new_position, inventory = new_inventory'
-
-		exports.oxmysql:update(updateCommand, {},
-		function(affectedRows)
-			if affectedRows > 0 then
-				if type(cb) == 'function' then cb() else print(('[^2INFO^7] Saved %s of %s player(s) over %s seconds'):format(affectedRows, #xPlayers, os.time() - time)) end
+		exports.oxmysql:prepare("UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ? WHERE `identifier` = ?", parameters,
+		function(results)
+			if results then
+				if type(cb) == 'function' then cb() else print(('[^2INFO^7] Saved %s %s over %s ms'):format(count, count > 1 and 'players' or 'player', (os.nanotime() - time) / 1000000)) end
 			end
 		end)
 	end

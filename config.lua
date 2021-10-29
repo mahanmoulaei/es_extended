@@ -17,7 +17,11 @@ Config.EnableDebug              = false -- Use Debug options?
 Config.EnableWantedLevel    	= false -- Use Normal GTA wanted Level?
 Config.EnablePVP                = true -- Allow Player to player combat
 
-Config.Multichar                = false -- Enable support for esx_multicharacter
-Config.Identity                 = false -- Select a characters identity data before they have loaded in (this happens by default with multichar)
+-- Enable support for esx_multicharacter
+Config.Multichar                = false
 
-Config.Identifier               = 'license' -- Recommended: license
+-- Select a characters identity data before they have loaded in (this happens by default with multichar)
+Config.Identity                 = false
+
+-- Set the default identifier to use for players (recommended: license)
+Config.Identifier               = GetConvar('sv_lan', '') == 'true' and 'ip' or 'license'

@@ -24,4 +24,15 @@ Config.Multichar                = false
 Config.Identity                 = false
 
 -- Set the default identifier to use for players (recommended: license)
-Config.Identifier               = GetConvar('sv_lan', '') == 'true' and 'ip' or 'license'
+Config.Identifier               = 'license'
+
+-- Add support for Project Error's phone resource (WIP)
+Config.NPWD                     = false
+
+
+
+
+-- Setup compatibility for lan servers / FxDK
+if GetConvar('sv_lan', '') == 'true' then
+	Config.Identifier = 'ip'
+end

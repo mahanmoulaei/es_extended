@@ -3,7 +3,7 @@ CreateThread(function()
 	SetMapName('San Andreas')
 	SetGameType('ESX Legacy')
 
-	local query = '`accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`'
+	local query = '`accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `phone_number`'
 	if Config.Multichar or Config.Identity then query = query..', `firstname`, `lastname`, `dateofbirth`, `sex`, `height`' end
 	LoadPlayer = "SELECT "..query.." FROM users WHERE identifier = ?"
 
@@ -56,7 +56,7 @@ function createESXPlayer(identifier, playerId, data)
 		accounts[account] = money
 	end
 
-	if IsPlayerAceAllowed(playerId, 'command') then
+	if IsPlayerAceAllowed(playerId, 'command') or GetConvar('sv_lan', '') == 'true' then
 		print(('[^2INFO^0] Player ^5%s ^0Has been granted admin permissions via ^5Ace Perms.^7'):format(playerId))
 		defaultGroup = 'admin'
 	else
@@ -190,6 +190,8 @@ function loadESXPlayer(identifier, playerId, isNew)
 			if result.height then userData.height = result.height end
 		end
 
+		userData.phoneNumber = result.phone_number or Config.NPWD and Core.GeneratePhoneNumber(identifier)
+
 		-- Statebags
 		Player.firstName = userData.firstname
 		Player.lastName = userData.lastname
@@ -209,6 +211,8 @@ function loadESXPlayer(identifier, playerId, isNew)
 			if userData.height then xPlayer.set('height', userData.height) end
 		end
 
+		xPlayer.set('phoneNumber', userData.phoneNumber)
+
 		TriggerEvent('esx:playerLoaded', playerId, xPlayer, isNew)
 
 		xPlayer.triggerEvent('esx:playerLoaded', {
@@ -221,7 +225,17 @@ function loadESXPlayer(identifier, playerId, isNew)
 			dead = false
 		}, isNew, userData.skin)
 
+
 		TriggerEvent('ox_inventory:setPlayerInventory', xPlayer, userData.inventory)
+		if Config.NPWD then
+			TriggerEvent('npwd:newPlayer', {
+				source = playerId,
+				identifier = identifier,
+				phoneNumber = userData.phoneNumber,
+				firstname = userData.firstname,
+				lastname = userData.lastname
+			})
+		end
 		xPlayer.triggerEvent('esx:registerSuggestions', Core.RegisteredCommands)
 		print(('[^2INFO^0] Player ^5"%s" ^0has connected to the server. ID: ^5%s^7'):format(xPlayer.getName(), playerId))
 	end)
@@ -239,6 +253,7 @@ local Logout = function(playerId)
 	local xPlayer = ESX.GetPlayerFromId(playerId)
 	if xPlayer then
 		TriggerEvent('esx:playerDropped', playerId, reason)
+		TriggerEvent('npwd:unloadPlayer', playerId)
 
 		ExecuteCommand(('remove_principal player.%s group.%s'):format(xPlayer.source, xPlayer.group))
 		ExecuteCommand(('remove_principal player.%s group.%s'):format(xPlayer.source, xPlayer.job.name))

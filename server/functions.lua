@@ -268,8 +268,20 @@ ESX.GetUsableItems = function()
 end
 
 ESX.DoesJobExist = function(job, grade)
-	if job and grade and ESX.Jobs[job]?.grades[tonumber(grade)] then
+	if job and grade and ESX.Jobs[job] and ESX.Jobs[job].grades[tonumber(grade)] then
 		return true
 	end
 	return false
+end
+
+Core.GeneratePhoneNumber = function(identifier)
+	while true do
+		local phoneNumber = ('%s-%s-%s'):format(math.random(100,999), math.random(100,999), math.random(1000,9999))
+		local exists = exports.oxmysql:scalarSync('SELECT 1 FROM users WHERE phone_number = ?', {phoneNumber})
+
+		if not exists then
+			exports.oxmysql:update('UPDATE users SET phone_number = ? WHERE identifier = ?', { phoneNumber, identifier })
+			return phoneNumber
+		end
+	end
 end

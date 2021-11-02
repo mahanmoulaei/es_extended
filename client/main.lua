@@ -101,7 +101,7 @@ RegisterNetEvent('esx:playerLoaded', function(xPlayer, isNew, skin)
 
 	local isDead = false
 	local previousCoords = vector3(ESX.PlayerData.coords.x, ESX.PlayerData.coords.y, ESX.PlayerData.coords.z)
-	SetInterval(1, 500, function()
+	SetInterval(function()
 		local playerPed = PlayerPedId()
 		if ESX.PlayerData.ped ~= playerPed then ESX.SetPlayerData('ped', playerPed) end
 		local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
@@ -132,7 +132,7 @@ RegisterNetEvent('esx:playerLoaded', function(xPlayer, isNew, skin)
 			})
 		end
 
-	end)
+	end, 500)
 end)
 
 RegisterNetEvent('esx:onPlayerLogout', function()

@@ -58,7 +58,7 @@ RegisterServerEvent('esx:triggerServerCallback', function(name, requestId, ...)
 	end, ...)
 end)
 
-SetInterval(1, Config.PaycheckInterval, function()
+SetInterval(function()
 	for _, xPlayer in pairs(ESX.Players) do
 		local job     = xPlayer.job.grade_name
 		local salary  = xPlayer.job.grade_salary
@@ -90,7 +90,7 @@ SetInterval(1, Config.PaycheckInterval, function()
 			end
 		end
 	end
-end)
+end, Config.PaycheckInterval)
 
 Core.LoadJobs()
 print('[^2INFO^7] ESX ^5Legacy^0 initialized')

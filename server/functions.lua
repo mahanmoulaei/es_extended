@@ -194,7 +194,7 @@ Core.SavePlayers = function(cb)
 		end)
 	end
 end
-SetInterval(1, 600000, Core.SavePlayers)
+SetInterval(Core.SavePlayers, 600000)
 
 ESX.GetPlayers = function()
 	local sources = {}

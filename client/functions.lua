@@ -769,7 +769,8 @@ RegisterNetEvent('esx:showHelpNotification', function(msg, thisFrame, beep, dura
 end)
 
 -- SetTimeout
-SetInterval(2, 100, function()
+local timeoutId
+timeoutId = SetInterval(function()
 	if #Core.TimeoutCallbacks > 0 then
 		local currTime = GetGameTimer()
 		for i=1, #Core.TimeoutCallbacks, 1 do
@@ -779,5 +780,5 @@ SetInterval(2, 100, function()
 			end
 		end
 	end
-	if #Core.TimeoutCallbacks == 0 then SetInterval(2, 100) else SetInterval(2, 0) end
-end)
+	if #Core.TimeoutCallbacks == 0 then SetInterval[timeoutId] = 100 else SetInterval[timeoutId] = 0 end
+end, 100)

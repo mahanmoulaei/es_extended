@@ -1,19 +1,16 @@
-local Intervals = {}
-SetInterval = function(id, msec, callback, onclear)
-	if Intervals[id] and msec then
-		Intervals[id] = msec
-	else
+SetInterval = setmetatable({currentId = 0}, {
+	__call = function(self, callback, timer)
+		local id = self.currentId + 1
+		self.currentId = id
+		self[id] = timer or 0
 		CreateThread(function()
-			Intervals[id] = msec
 			repeat
-				Wait(Intervals[id])
-				callback(Intervals[id])
-			until Intervals[id] == -1 and (onclear and onclear() or true)
-			Intervals[id] = nil
+				local interval = self[id]
+				Wait(interval)
+				callback(interval)
+			until interval == -1
+			self[id] = nil
 		end)
+		return id
 	end
-end
-
-ClearInterval = function(id)
-	if Intervals[id] then Intervals[id] = -1 end
-end
+})

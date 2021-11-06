@@ -627,7 +627,8 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 			modTrimB          = GetVehicleMod(vehicle, 44),
 			modTank           = GetVehicleMod(vehicle, 45),
 			modWindows        = GetVehicleMod(vehicle, 46),
-			modLivery         = GetVehicleLivery(vehicle)
+			modUnk47          = GetVehicleMod(vehicle, 47),
+			modLivery         = GetVehicleMod(vehicle, 48)
 		}
 	else
 		return
@@ -696,6 +697,8 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 		if props.modXenon then ToggleVehicleMod(vehicle,  22, props.modXenon) end
 		if props.modFrontWheels then SetVehicleMod(vehicle, 23, props.modFrontWheels, false) end
 		if props.modBackWheels then SetVehicleMod(vehicle, 24, props.modBackWheels, false) end
+		if props.modFrontTyres then SetVehicleMod(vehicle, 23, props.modFrontTyres, true) end
+		if props.modBackTyres then SetVehicleMod(vehicle, 24, props.modBackTyres, true) end
 		if props.modPlateHolder then SetVehicleMod(vehicle, 25, props.modPlateHolder, false) end
 		if props.modVanityPlate then SetVehicleMod(vehicle, 26, props.modVanityPlate, false) end
 		if props.modTrimA then SetVehicleMod(vehicle, 27, props.modTrimA, false) end
@@ -721,7 +724,6 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 
 		if props.modLivery then
 			SetVehicleMod(vehicle, 48, props.modLivery, false)
-			SetVehicleLivery(vehicle, props.modLivery)
 		end
 	end
 end

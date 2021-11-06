@@ -721,6 +721,7 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 		if props.modTrimB then SetVehicleMod(vehicle, 44, props.modTrimB, false) end
 		if props.modTank then SetVehicleMod(vehicle, 45, props.modTank, false) end
 		if props.modWindows then SetVehicleMod(vehicle, 46, props.modWindows, false) end
+		if props.modUnk47 then SetVehicleMod(vehicle, 47, props.modUnk47, false) end
 
 		if props.modLivery then
 			SetVehicleMod(vehicle, 48, props.modLivery, false)

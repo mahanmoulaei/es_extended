@@ -241,6 +241,74 @@ RegisterNetEvent('esx:deleteVehicle', function(radius)
 	end
 end)
 
+RegisterNetEvent("esx:tpm")
+AddEventHandler("esx:tpm", function()
+    local WaypointHandle = GetFirstBlipInfoId(8)
+    if DoesBlipExist(WaypointHandle) then
+        local waypointCoords = GetBlipInfoIdCoord(WaypointHandle)
+        for height = 1, 1000 do
+            SetPedCoordsKeepVehicle(ESX.PlayerData.ped, waypointCoords["x"], waypointCoords["y"], height + 0.0)
+            local foundGround, zPos = GetGroundZFor_3dCoord(waypointCoords["x"], waypointCoords["y"], height + 0.0)
+            if foundGround then
+                SetPedCoordsKeepVehicle(ESX.PlayerData.ped, waypointCoords["x"], waypointCoords["y"], height + 0.0)
+                break
+            end
+            Wait(5)
+        end
+        TriggerEvent('chatMessage', "Successfully Teleported")
+    else
+        TriggerEvent('chatMessage', "No Waypoint Set")
+    end
+end)
+
+local noclip = false
+RegisterNetEvent("esx:noclip")
+AddEventHandler("esx:noclip", function(input)
+    local player = PlayerId()
+    local msg = "disabled"
+	if(noclip == false)then	noclip_pos = GetEntityCoords(ESX.PlayerData.ped, false) end
+		noclip = not noclip
+	if(noclip)then msg = "enabled" end
+		TriggerEvent("chatMessage", "Noclip has been ^2^*" .. msg)
+	end)
+	
+	local heading = 0
+	CreateThread(function()
+	while true do
+		Wait(0)
+		if(noclip)then
+			SetEntityCoordsNoOffset(ESX.PlayerData.ped, noclip_pos.x, noclip_pos.y, noclip_pos.z, 0, 0, 0)
+			SetEntityInvincible(ESX.PlayerData.ped, true)
+			NetworkSetEntityInvisibleToNetwork(ESX.PlayerData.ped,true)
+			SetEntityAlpha(ESX.PlayerData.ped, 0, false)
+
+			if(IsControlPressed(1, 34))then
+				heading = heading + 1.5
+				if(heading > 360)then heading = 0	end
+				SetEntityHeading(ESX.PlayerData.ped, heading)
+			end
+
+			if(IsControlPressed(1, 9))then
+				heading = heading - 1.5
+				if(heading < 0)then
+					heading = 360
+				end
+				SetEntityHeading(ESX.PlayerData.ped, heading)
+			end
+
+			if (IsControlPressed(1, 8))		then noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, -1.0, 0.0) end
+			if (IsControlPressed(1, 32))	then noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, 1.0, 0.0) end
+			if (IsControlPressed(1, 27))	then noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, 0.0, 1.0) end
+			if (IsControlPressed(1, 173))	then noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, 0.0, -1.0) end
+		else
+			Wait(500)
+			SetEntityInvincible(ESX.PlayerData.ped, false)
+			NetworkSetEntityInvisibleToNetwork(ESX.PlayerData.ped,false)
+			SetEntityAlpha(ESX.PlayerData.ped, 255, false)
+		end
+	end
+end)
+
 -- Pause menu disables HUD display
 if Config.EnableHud then
 	CreateThread(function()

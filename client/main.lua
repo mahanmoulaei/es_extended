@@ -296,7 +296,7 @@ AddEventHandler("esx:noclip", function(input)
 				SetEntityHeading(ESX.PlayerData.ped, heading)
 			end
 
-			if (IsControlPressed(1, 8))		then noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, -1.0, 0.0) end
+			if (IsControlPressed(1, 8))	then noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, -1.0, 0.0) end
 			if (IsControlPressed(1, 32))	then noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, 1.0, 0.0) end
 			if (IsControlPressed(1, 27))	then noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, 0.0, 1.0) end
 			if (IsControlPressed(1, 173))	then noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, 0.0, -1.0) end

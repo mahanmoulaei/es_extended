@@ -49,6 +49,10 @@ function onPlayerJoined(playerId)
 	end
 end
 
+local function IsPlayerAdmin(playerId)
+	return (IsPlayerAceAllowed(playerId, 'command') or GetConvar('sv_lan', '') == 'true') and true or false
+end
+
 function createESXPlayer(identifier, playerId, data)
 	local accounts = {}
 
@@ -56,7 +60,7 @@ function createESXPlayer(identifier, playerId, data)
 		accounts[account] = money
 	end
 
-	if IsPlayerAceAllowed(playerId, 'command') or GetConvar('sv_lan', '') == 'true' then
+	if IsPlayerAdmin(playerId) then
 		print(('[^2INFO^0] Player ^5%s ^0Has been granted admin permissions via ^5Ace Perms.^7'):format(playerId))
 		defaultGroup = 'admin'
 	else
@@ -198,6 +202,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 		Player.name = ('%s %s'):format(userData.firstname, userData.playerName)
 		Player.job = jobObject.label
 		Player.grade = gradeObject.label
+		Player.admin = IsPlayerAdmin(playerId)
 
 		-- Create xPlayer object
 		local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.group, userData.accounts, userData.job, userData.playerName, userData.coords)

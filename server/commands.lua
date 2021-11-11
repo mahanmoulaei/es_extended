@@ -117,6 +117,14 @@ ESX.RegisterCommand('coords', "admin", function(xPlayer, args, showError)
 	print("".. xPlayer.getName().. ": ^5".. xPlayer.getCoords(true))
 end, true)
 
+ESX.RegisterCommand('tpm', "admin", function(xPlayer, args, showError)
+	xPlayer.triggerEvent("esx:tpm")
+end, true)
+
+ESX.RegisterCommand("noclip", 'admin', function(xPlayer, args, showError)
+	xPlayer.triggerEvent('esx:noclip')
+end, false)
+
 ESX.RegisterCommand('goto', "admin", function(xPlayer, args, showError)
 		local targetCoords = args.playerId.getCoords()
 		xPlayer.setCoords(targetCoords)

@@ -104,7 +104,7 @@ RegisterNetEvent('esx:playerLoaded', function(xPlayer, isNew, skin)
 	SetInterval(function()
 		local playerPed = PlayerPedId()
 		if ESX.PlayerData.ped ~= playerPed then ESX.SetPlayerData('ped', playerPed) end
-		local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
+		local playerCoords = GetEntityCoords(playerPed)
 
 		if not isDead and IsPedFatallyInjured(playerPed) then
 			isDead = true
@@ -128,7 +128,7 @@ RegisterNetEvent('esx:playerLoaded', function(xPlayer, isNew, skin)
 				x = ESX.Math.Round(playerCoords.x, 1),
 				y = ESX.Math.Round(playerCoords.y, 1),
 				z = ESX.Math.Round(playerCoords.z, 1),
-				heading = ESX.Math.Round(GetEntityHeading(ESX.PlayerData.ped), 1)
+				heading = ESX.Math.Round(GetEntityHeading(playerPed), 1)
 			})
 		end
 
@@ -186,10 +186,11 @@ RegisterNetEvent('esx:spawnVehicle', function(vehicle)
 	local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
 
 	if IsModelInCdimage(model) then
-		local playerCoords, playerHeading = GetEntityCoords(ESX.PlayerData.ped), GetEntityHeading(ESX.PlayerData.ped)
+		local playerPed = ESX.PlayerData.ped
+		local playerCoords, playerHeading = GetEntityCoords(playerPed), GetEntityHeading(playerPed)
 
 		ESX.Game.SpawnVehicle(model, playerCoords, playerHeading, function(vehicle)
-			TaskWarpPedIntoVehicle(ESX.PlayerData.ped, vehicle, -1)
+			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 		end)
 	else
 		TriggerEvent('chat:addMessage', { args = { '^1SYSTEM', 'Invalid vehicle model.' } })
@@ -205,9 +206,10 @@ RegisterNetEvent('esx:registerSuggestions', function(registeredCommands)
 end)
 
 RegisterNetEvent('esx:deleteVehicle', function(radius)
+	local playerPed = ESX.PlayerData.ped
 	if radius and tonumber(radius) then
 		radius = tonumber(radius) + 0.01
-		local vehicles = ESX.Game.GetVehiclesInArea(GetEntityCoords(ESX.PlayerData.ped), radius)
+		local vehicles = ESX.Game.GetVehiclesInArea(GetEntityCoords(playerPed), radius)
 
 		for k,entity in ipairs(vehicles) do
 			local attempt = 0
@@ -225,8 +227,8 @@ RegisterNetEvent('esx:deleteVehicle', function(radius)
 	else
 		local vehicle, attempt = ESX.Game.GetVehicleInDirection(), 0
 
-		if IsPedInAnyVehicle(ESX.PlayerData.ped, true) then
-			vehicle = GetVehiclePedIsIn(ESX.PlayerData.ped, false)
+		if IsPedInAnyVehicle(playerPed, true) then
+			vehicle = GetVehiclePedIsIn(playerPed, false)
 		end
 
 		while not NetworkHasControlOfEntity(vehicle) and attempt < 100 and DoesEntityExist(vehicle) do
@@ -241,22 +243,75 @@ RegisterNetEvent('esx:deleteVehicle', function(radius)
 	end
 end)
 
+RegisterNetEvent('esx:tpm', function()
+	if LocalPlayer.state.admin == true then
+		local WaypointHandle = GetFirstBlipInfoId(8)
+		if DoesBlipExist(WaypointHandle) then
+			local playerPed = ESX.PlayerData.ped
+			local waypointCoords = GetBlipInfoIdCoord(WaypointHandle)
+			for height = 1, 1000 do
+				SetPedCoordsKeepVehicle(playerPed, waypointCoords.x, waypointCoords.y, height + 0.0)
+				local foundGround, zPos = GetGroundZFor_3dCoord(waypointCoords.x, waypointCoords.y, height + 0.0)
+				if foundGround then
+					SetPedCoordsKeepVehicle(playerPed, waypointCoords.x, waypointCoords.y, height + 0.0)
+					break
+				end
+			end
+			TriggerEvent('chat:addMessage', 'Successfully Teleported')
+		else
+			TriggerEvent('chat:addMessage', 'No Waypoint Set')
+		end
+	end
+end)
+
+local noclip
+RegisterNetEvent('esx:noclip', function()
+	if LocalPlayer.state.admin == true then
+		if not noclip then
+			local playerPed = ESX.PlayerData.ped
+			SetEntityInvincible(playerPed, true)
+			SetPedAoBlobRendering(playerPed, false)
+			SetEntityAlpha(playerPed, 0)
+			local position = GetEntityCoords(playerPed)
+
+			noclip = SetInterval(function()
+				playerPed = ESX.PlayerData.ped
+				local heading = GetFinalRenderedCamRot(2)?.z or 0.0
+				SetEntityHeading(playerPed, heading)
+
+				if (IsControlPressed(1, 8)) then position = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, -1.0, 0.0) end
+				if (IsControlPressed(1, 32)) then position = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 1.0, 0.0) end
+				if (IsControlPressed(1, 27)) then position = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 0.0, 1.0) end
+				if (IsControlPressed(1, 173)) then position = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 0.0, -1.0) end
+
+				SetEntityCoordsNoOffset(playerPed, position.x, position.y, position.z, 0, 0, 0)
+			end, 0)
+		else
+			ClearInterval(noclip)
+			local playerPed = ESX.PlayerData.ped
+			SetEntityInvincible(playerPed, false)
+			SetPedAoBlobRendering(playerPed, true)
+			ResetEntityAlpha(playerPed)
+			noclip = false
+		end
+
+		TriggerEvent('chat:addMessage', ('Noclip has been %s'):format(noclip and 'disabled' or 'enabled'))
+	end
+end)
+
 -- Pause menu disables HUD display
 if Config.EnableHud then
-	CreateThread(function()
-		local isPaused = false
-		while true do
-			Wait(300)
-
-			if IsPauseMenuActive() and not isPaused then
-				isPaused = true
-				ESX.UI.HUD.SetDisplay(0.0)
-			elseif not IsPauseMenuActive() and isPaused then
-				isPaused = false
-				ESX.UI.HUD.SetDisplay(1.0)
-			end
+	local isPaused = false
+	SetInterval(function()
+		local paused = IsPauseMenuActive()
+		if paused and not isPaused then
+			isPaused = true
+			ESX.UI.HUD.SetDisplay(0.0)
+		elseif not paused and isPaused then
+			isPaused = false
+			ESX.UI.HUD.SetDisplay(1.0)
 		end
-	end)
+	end, 300)
 
 	AddEventHandler('esx:loadingScreenOff', function()
 		ESX.UI.HUD.SetDisplay(1.0)

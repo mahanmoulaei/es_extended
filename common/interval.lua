@@ -14,3 +14,9 @@ SetInterval = setmetatable({currentId = 0}, {
 		return id
 	end
 })
+
+function ClearInterval(id)
+	if SetInterval[id] then
+		SetInterval[id] = -1
+	end
+end

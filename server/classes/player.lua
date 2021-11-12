@@ -217,7 +217,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
 
 	self.setMaxWeight = function(newWeight)
 		self.maxWeight = newWeight
-		return exports.ox_inventory:Inventory(self.source):set('weight', newWeight)
+		return exports.ox_inventory:Inventory(self.source):set('maxWeight', newWeight)
 	end
 
 	self.setJob = function(job, grade)

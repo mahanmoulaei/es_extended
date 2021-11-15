@@ -256,6 +256,8 @@ RegisterNetEvent('esx:tpm', function()
 					SetPedCoordsKeepVehicle(playerPed, waypointCoords.x, waypointCoords.y, height + 0.0)
 					break
 				end
+
+				Wait(5)
 			end
 			TriggerEvent('chat:addMessage', 'Successfully Teleported')
 		else

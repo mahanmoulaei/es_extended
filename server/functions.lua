@@ -244,8 +244,8 @@ ESX.RegisterUsableItem = function(item, cb)
 	Core.UsableItemsCallbacks[item] = cb
 end
 
-ESX.UseItem = function(source, item)
-	Core.UsableItemsCallbacks[item](source, item)
+ESX.UseItem = function(source, item, data)
+	Core.UsableItemsCallbacks[item](source, item, data)
 end
 
 ESX.GetItemLabel = function(item)

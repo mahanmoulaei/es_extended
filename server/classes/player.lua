@@ -261,8 +261,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
 
 			TriggerEvent('esx:setJob', self.source, self.job, lastJob)
 			self.triggerEvent('esx:setJob', self.job)
-			Player.job = jobObject.label
-			Player.grade = gradeObject.label
+			Player.job = jobObject.name
+			Player.grade = gradeObject.name
 		else
 			print(('[es_extended] [^3WARNING^7] Ignoring invalid .setJob() usage for "%s"'):format(self.identifier))
 		end

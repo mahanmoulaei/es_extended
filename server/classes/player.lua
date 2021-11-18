@@ -75,6 +75,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
 		ExecuteCommand(('remove_principal player.%s group.%s'):format(self.source, self.group))
 		self.group = newGroup
 		ExecuteCommand(('add_principal player.%s group.%s'):format(self.source, self.group))
+		Player(playerId).state.admin = Core.IsPlayerAdmin(self.source)
 	end
 
 	self.getGroup = function()
@@ -256,8 +257,12 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
 				ExecuteCommand(('add_principal player.%s group.%s'):format(self.source, self.job.name))
 			end
 
+			local Player = Player(self.source).state
+
 			TriggerEvent('esx:setJob', self.source, self.job, lastJob)
 			self.triggerEvent('esx:setJob', self.job)
+			Player.job = jobObject.label
+			Player.grade = gradeObject.label
 		else
 			print(('[es_extended] [^3WARNING^7] Ignoring invalid .setJob() usage for "%s"'):format(self.identifier))
 		end

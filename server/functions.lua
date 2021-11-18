@@ -274,6 +274,10 @@ ESX.DoesJobExist = function(job, grade)
 	return false
 end
 
+Core.IsPlayerAdmin = function(playerId)
+	return (IsPlayerAceAllowed(playerId, 'command') or GetConvar('sv_lan', '') == 'true') and true or false
+end
+
 Core.GeneratePhoneNumber = function(identifier)
 	while true do
 		local phoneNumber = ('%s-%s-%s'):format(math.random(100,999), math.random(100,999), math.random(1000,9999))

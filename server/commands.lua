@@ -24,7 +24,7 @@ end, true, {help = _U('command_setjob'), validate = true, arguments = {
 ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
 	local vehicle = GetVehiclePedIsIn(GetPlayerPed(xPlayer.source))
 	if vehicle then DeleteEntity(vehicle) end
-	if not args.car then args.car = "baller2" end
+	if not args.car then args.car = 'baller2' end
 	xPlayer.triggerEvent('esx:spawnVehicle', args.car)
 end, false, {help = _U('command_car'), validate = false, arguments = {
 	{name = 'car', help = _U('command_car_car'), type = 'any'}
@@ -99,58 +99,58 @@ ESX.RegisterCommand('saveall', 'admin', function(xPlayer, args, showError)
 	Core.SavePlayers()
 end, true, {help = _U('command_saveall')})
 
-ESX.RegisterCommand('group', {"user", "admin"}, function(xPlayer, args, showError)
-	print(xPlayer.getName()..", You are currently: ^5".. xPlayer.getGroup())
-end, true)
+ESX.RegisterCommand('group', {'user', 'admin'}, function(xPlayer, args, showError)
+	print(xPlayer.getName()..', You are currently: ^5'.. xPlayer.getGroup())
+end, false)
 
-ESX.RegisterCommand('job', {"user", "admin"}, function(xPlayer, args, showError)
-print(xPlayer.getName()..", You are currently: ^5".. xPlayer.getJob().name.. "^0 - ^5".. xPlayer.getJob().grade_label)
-end, true)
+ESX.RegisterCommand('job', {'user', 'admin'}, function(xPlayer, args, showError)
+print(xPlayer.getName()..', You are currently: ^5'.. xPlayer.getJob().name.. '^0 - ^5'.. xPlayer.getJob().grade_label)
+end, false)
 
-ESX.RegisterCommand('info', {"user", "admin"}, function(xPlayer, args, showError)
+ESX.RegisterCommand('info', {'user', 'admin'}, function(xPlayer, args, showError)
 	local job = xPlayer.getJob().name
 	local jobgrade = xPlayer.getJob().grade_name
-	print("^2ID : ^5"..xPlayer.source.." ^0| ^2Name:^5"..xPlayer.getName().." ^0 | ^2Group:^5"..xPlayer.getGroup().."^0 | ^2Job:^5".. job.."")
-	end, true)
+	print('^2ID : ^5'..xPlayer.source..' ^0| ^2Name:^5'..xPlayer.getName()..' ^0 | ^2Group:^5'..xPlayer.getGroup()..'^0 | ^2Job:^5'.. job..'')
+end, false)
 
-ESX.RegisterCommand('coords', "admin", function(xPlayer, args, showError)
-	print("".. xPlayer.getName().. ": ^5".. xPlayer.getCoords(true))
-end, true)
+ESX.RegisterCommand('coords', 'admin', function(xPlayer, args, showError)
+	print(''.. xPlayer.getName().. ': ^5'.. xPlayer.getCoords(true))
+end, false)
 
-ESX.RegisterCommand('tpm', "admin", function(xPlayer, args, showError)
-	xPlayer.triggerEvent("esx:tpm")
-end, true)
+ESX.RegisterCommand('tpm', 'admin', function(xPlayer, args, showError)
+	xPlayer.triggerEvent('esx:tpm')
+end, false)
 
-ESX.RegisterCommand("noclip", 'admin', function(xPlayer, args, showError)
+ESX.RegisterCommand('noclip', 'admin', function(xPlayer, args, showError)
 	xPlayer.triggerEvent('esx:noclip')
 end, false)
 
-ESX.RegisterCommand('goto', "admin", function(xPlayer, args, showError)
+ESX.RegisterCommand('goto', 'admin', function(xPlayer, args, showError)
 		local targetCoords = args.playerId.getCoords()
 		xPlayer.setCoords(targetCoords)
-end, true, {help = _U('goto'), validate = true, arguments = {
+end, false, {help = _U('goto'), validate = true, arguments = {
 	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
 }})
 
-ESX.RegisterCommand('bring', "admin", function(xPlayer, args, showError)
+ESX.RegisterCommand('bring', 'admin', function(xPlayer, args, showError)
 		local playerCoords = xPlayer.getCoords()
 		args.playerId.setCoords(playerCoords)
-end, true, {help = _U('bring'), validate = true, arguments = {
+end, false, {help = _U('bring'), validate = true, arguments = {
 	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
 }})
 
-ESX.RegisterCommand('reviveall', "admin", function(xPlayer, args, showError)
+ESX.RegisterCommand('reviveall', 'admin', function(xPlayer, args, showError)
 	for _, playerId in ipairs(ESX.GetPlayers()) do
 		TriggerClientEvent('esx_ambulancejob:revive', playerId)
 	end
-end, false)
+end, true)
 
-ESX.RegisterCommand('players', "admin", function(xPlayer, args, showError)
+ESX.RegisterCommand('players', 'admin', function(xPlayer, args, showError)
 	local xAll = ESX.GetPlayers()
-	print("^5"..#xAll.." ^2online player(s)^0")
+	print('^5'..#xAll..' ^2online player(s)^0')
 	for i=1, #xAll, 1 do
 		local xPlayer = ESX.GetPlayerFromId(xAll[i])
-		print("^1[ ^2ID : ^5"..xPlayer.source.." ^0| ^2Name : ^5"..xPlayer.getName().." ^0 | ^2Group : ^5"..xPlayer.getGroup().." ^0 | ^2Identifier : ^5".. xPlayer.identifier .."^1]^0\n")
+		print('^1[ ^2ID : ^5'..xPlayer.source..' ^0| ^2Name : ^5'..xPlayer.getName()..' ^0 | ^2Group : ^5'..xPlayer.getGroup()..' ^0 | ^2Identifier : ^5'.. xPlayer.identifier ..'^1]^0\n')
 	end
 end, true)
 

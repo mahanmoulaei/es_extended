@@ -279,13 +279,7 @@ Core.IsPlayerAdmin = function(playerId)
 end
 
 Core.GeneratePhoneNumber = function(identifier)
-	while true do
-		local phoneNumber = ('%s-%s-%s'):format(math.random(100,999), math.random(100,999), math.random(1000,9999))
-		local exists = exports.oxmysql:scalarSync('SELECT 1 FROM users WHERE phone_number = ?', {phoneNumber})
-
-		if not exists then
-			exports.oxmysql:update('UPDATE users SET phone_number = ? WHERE identifier = ?', { phoneNumber, identifier })
-			return phoneNumber
-		end
-	end
+	local phoneNumber = exports.npwd:generatePhoneNumber()
+	exports.oxmysql:update('UPDATE users SET phone_number = ? WHERE identifier = ?', { phoneNumber, identifier })
+	return phoneNumber
 end

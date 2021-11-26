@@ -229,7 +229,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 
 		TriggerEvent('ox_inventory:setPlayerInventory', xPlayer, userData.inventory)
 		if Config.NPWD then
-			TriggerEvent('npwd:newPlayer', {
+			exports.npwd:newPlayer({
 				source = playerId,
 				identifier = identifier,
 				phoneNumber = userData.phoneNumber,
@@ -246,7 +246,9 @@ local Logout = function(playerId)
 	local xPlayer = ESX.GetPlayerFromId(playerId)
 	if xPlayer then
 		TriggerEvent('esx:playerDropped', playerId, reason)
-		TriggerEvent('npwd:unloadPlayer', playerId)
+		if Config.NPWD then
+			exports.npwd:unloadPlayer(playerId)
+		end
 
 		ExecuteCommand(('remove_principal player.%s group.%s'):format(xPlayer.source, xPlayer.group))
 		ExecuteCommand(('remove_principal player.%s group.%s'):format(xPlayer.source, xPlayer.job.name))
@@ -255,6 +257,30 @@ local Logout = function(playerId)
 			ESX.Players[playerId] = nil
 		end)
 	end
+end
+
+if Config.NPWD then
+	AddEventHandler('onServerResourceStart', function(resource)
+		if resource == 'npwd' then
+			Wait(100)
+			local xPlayers = ESX.GetExtendedPlayers()
+			if next(xPlayers) then
+	
+				for i=1, #xPlayers do
+					local xPlayer = xPlayers[i]
+					local variables = xPlayer.variables
+	
+					exports.npwd:newPlayer({
+						source = xPlayer.source,
+						identifier = xPlayer.identifier,
+						phoneNumber = variables.phoneNumber,
+						firstname = variables.firstName,
+						lastname = variables.lastName
+					})
+				end
+			end
+		end
+	end)
 end
 
 AddEventHandler('playerDropped', function(reason)

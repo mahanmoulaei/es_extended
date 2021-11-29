@@ -9,13 +9,13 @@ ESX.OneSync.Players = function(playerId, closest, coords, distance)
 	for _, xPlayer in pairs(ESX.Players) do
 		if xPlayer.source ~= playerId then
 			if closest ~= nil then
-				table.insert(players, {id = xPlayer.source, ped = GetPlayerPed(xPlayer.source)})
+				players[#players+1] = {id = xPlayer.source, ped = GetPlayerPed(xPlayer.source)}
 			else
 				local entity = GetPlayerPed(xPlayer.source)
 				local entityCoords = GetEntityCoords(entity)
 				if not closest then
 					if #(coords - entityCoords) <= distance then
-						table.insert(players, {id = xPlayer.source, ped = entity, coords = entityCoords})
+						players[#players+1] = {id = xPlayer.source, ped = entity, coords = entityCoords}
 					end
 				else
 					local dist = #(coords - entityCoords)
@@ -75,7 +75,7 @@ ESX.OneSync.GetNearbyEntities = function(entities, coords, modelFilter, maxDista
 			if not modelFilter or modelFilter[GetEntityModel(entity)] then
 				local entityCoords = GetEntityCoords(entity)
 				if not maxDistance or #(coords - entityCoords) <= maxDistance then
-					table.insert(nearbyEntities, {entity=entity, coords=entityCoords})
+					nearbyEntities[#nearbyEntities+1] = {entity=entity, coords=entityCoords}
 				end
 			end
 		end

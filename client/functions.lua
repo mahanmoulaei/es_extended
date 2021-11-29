@@ -537,6 +537,21 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 	if DoesEntityExist(vehicle) then
 		local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
 		local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
+		
+		local hasCustomPrimaryColor = GetIsVehiclePrimaryColourCustom(vehicle)
+		local customPrimaryColor = nil
+		if hasCustomPrimaryColor then
+			local r, g, b = GetVehicleCustomPrimaryColour(vehicle)
+			customPrimaryColor = { r, g, b }
+		end
+		
+		local hasCustomSecondaryColor = GetIsVehicleSecondaryColourCustom(vehicle)
+		local customSecondaryColor = nil
+		if hasCustomSecondaryColor then
+			local r, g, b = GetVehicleCustomSecondaryColour(vehicle)
+			customSecondaryColor = { r, g, b }
+		end
+		
 		local extras = {}
 
 		for extraId=0, 12 do
@@ -560,6 +575,9 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 			dirtLevel         = ESX.Math.Round(GetVehicleDirtLevel(vehicle), 1),
 			color1            = colorPrimary,
 			color2            = colorSecondary,
+			
+			customPrimaryColor = customPrimaryColor,
+			customSecondaryColor = customSecondaryColor,
 
 			pearlescentColor  = pearlescentColor,
 			wheelColor        = wheelColor,
@@ -649,6 +667,8 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 		if props.tankHealth then SetVehiclePetrolTankHealth(vehicle, props.tankHealth + 0.0) end
 		if props.fuelLevel then SetVehicleFuelLevel(vehicle, props.fuelLevel + 0.0) end
 		if props.dirtLevel then SetVehicleDirtLevel(vehicle, props.dirtLevel + 0.0) end
+		if props.customPrimaryColor then SetVehicleCustomPrimaryColour(vehicle, props.customPrimaryColor[1], props.customPrimaryColor[2], props.customPrimaryColor[3]) end 
+		if props.customSecondaryColor then SetVehicleCustomSecondaryColour(vehicle, props.customSecondaryColor[1], props.customSecondaryColor[2], props.customSecondaryColor[3]) end
 		if props.color1 then SetVehicleColours(vehicle, props.color1, colorSecondary) end
 		if props.color2 then SetVehicleColours(vehicle, props.color1 or colorPrimary, props.color2) end
 		if props.pearlescentColor then SetVehicleExtraColours(vehicle, props.pearlescentColor, wheelColor) end

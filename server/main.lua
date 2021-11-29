@@ -195,7 +195,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 		-- Statebags
 		Player.firstName = userData.firstname
 		Player.lastName = userData.lastname
-		Player.name = ('%s %s'):format(userData.firstname, userData.playerName)
+		Player.name = ('%s %s'):format(userData.firstname, userData.lastname)
 		Player.job = jobObject.name
 		Player.grade = gradeObject.name
 		Player.admin = Core.IsPlayerAdmin(playerId)

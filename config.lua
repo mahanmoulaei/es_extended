@@ -26,13 +26,17 @@ Config.Identity                 = false
 -- Set the default identifier to use for players (recommended: license)
 Config.Identifier               = 'license'
 
--- Add support for Project Error's phone resource (WIP)
-Config.NPWD                     = false
 
 
+----------------
+-- Compatibility
+----------------
 
-
--- Setup compatibility for lan servers / FxDK
+-- FxDK and lan servers
 if GetConvar('sv_lan', '') == 'true' then
 	Config.Identifier = 'ip'
 end
+
+-- New Phone Who Dis
+Config.NPWD = GetResourceState('npwd')
+Config.NPWD = (Config.NPWD == 'started' or Config.NPWD == 'starting') and true

@@ -1,33 +1,46 @@
 ESX.OneSync = {}
 
-ESX.OneSync.Players = function(playerId, closest, coords, distance)
-	local players = {}
-	local distance = distance or 100
-	local playerPed = playerId and GetPlayerPed(playerId)
-	if closest ~= nil then coords = type(coords) == 'number' and GetEntityCoords(GetPlayerPed(coords)) or vector3(coords.x, coords.y, coords.z) end
+function ESX.OneSync.Players(source, closest, distance, ignore)
+	local result = {}
+	local count = 0
+	if not distance then distance = 100 end
+	if type(source) == 'number' then source = GetEntityCoords(source) end
 
 	for _, xPlayer in pairs(ESX.Players) do
-		if xPlayer.source ~= playerId then
-			if closest ~= nil then
-				players[#players+1] = {id = xPlayer.source, ped = GetPlayerPed(xPlayer.source)}
+		if not ignore or not ignore[xPlayer.source] then
+			local entity = GetPlayerPed(xPlayer.source)
+			local coords = GetEntityCoords(entity)
+
+			if not closest then
+				local dist = #(source - coords)
+				if dist <= distance then
+					count += 1
+					result[count] = {id = xPlayer.source, ped = entity, coords = coords, dist = dist}
+				end
 			else
-				local entity = GetPlayerPed(xPlayer.source)
-				local entityCoords = GetEntityCoords(entity)
-				if not closest then
-					if #(coords - entityCoords) <= distance then
-						players[#players+1] = {id = xPlayer.source, ped = entity, coords = entityCoords}
-					end
-				else
-					local dist = #(coords - entityCoords)
-					if dist <= players.distance or distance then
-						players = {id = xPlayer.source, ped = entity, coords = entityCoords, distance = dist}
-					end
+				local dist = #(source - coords)
+				if dist <= (result.dist or distance) then
+					result = {id = xPlayer.source, ped = entity, coords = coords, dist = dist}
 				end
 			end
 		end
 	end
 
-	return players
+	return result
+end
+
+---@param source vector|number entitycoords or entityid
+---@param maxDistance number
+---@param ignore table
+ESX.OneSync.GetPlayersInArea = function(source, maxDistance, ignore)
+	return ESX.OneSync.Players(source, false, maxDistance, ignore)
+end
+
+---@param source vector|number entitycoords or entityid
+---@param maxDistance number
+---@param ignore table
+ESX.OneSync.GetClosestPlayer = function(source, maxDistance, ignore)
+	return ESX.OneSync.Players(source, true, maxDistance, ignore)
 end
 
 ESX.OneSync.SpawnVehicle = function(model, coords, heading, cb)
@@ -57,14 +70,6 @@ ESX.OneSync.SpawnPed = function(model, coords, heading, cb)
 		while not DoesEntityExist(entity) do Wait(20) end
 		cb(entity)
 	end)
-end
-
-ESX.OneSync.GetPlayersInArea = function(playerId, coords, maxDistance)
-	return ESX.OneSync.Players(playerId, false, coords, maxDistance)
-end
-
-ESX.OneSync.GetClosestPlayer = function(playerId, coords)
-	return ESX.OneSync.Players(playerId, true, coords)
 end
 
 ESX.OneSync.GetNearbyEntities = function(entities, coords, modelFilter, maxDistance, isPed)

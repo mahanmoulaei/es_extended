@@ -277,9 +277,3 @@ end
 Core.IsPlayerAdmin = function(playerId)
 	return (IsPlayerAceAllowed(playerId, 'command') or GetConvar('sv_lan', '') == 'true') and true or false
 end
-
-Core.GeneratePhoneNumber = function(identifier)
-	local phoneNumber = exports.npwd:generatePhoneNumber()
-	exports.oxmysql:update('UPDATE users SET phone_number = ? WHERE identifier = ?', { phoneNumber, identifier })
-	return phoneNumber
-end

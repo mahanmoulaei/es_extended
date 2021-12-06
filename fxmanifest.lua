@@ -23,7 +23,9 @@ server_scripts {
 	'common/modules/math.lua',
 	'common/modules/table.lua',
 	'common/functions.lua',
-	'server/onesync.lua'
+
+	'server/onesync.lua',
+	'server/npwd.lua'
 }
 
 client_scripts {

@@ -31,12 +31,8 @@ Config.Identifier               = 'license'
 ----------------
 -- Compatibility
 ----------------
+-- Communicate with NPWD after xPlayer creation
+Config.NPWD               = false
 
--- FxDK and lan servers
-if GetConvar('sv_lan', '') == 'true' then
-	Config.Identifier = 'ip'
-end
-
--- New Phone Who Dis
-Config.NPWD = GetResourceState('npwd')
-Config.NPWD = (Config.NPWD == 'started' or Config.NPWD == 'starting') and true
+-- Set identifier to ip when using FxDK or sv_lan
+Config.Identifier         = GetConvar('sv_lan', '') == 'true' and 'ip' or Config.Identifier

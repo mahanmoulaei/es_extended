@@ -47,4 +47,4 @@ if GetResourceState('npwd') ~= 'missing' then
         end
     end)
 
-else NPWD = false end
+else Config.NPWD = false end

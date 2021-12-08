@@ -1,5 +1,51 @@
-Config = {}
-Config.Locale = 'en'
+local Config = json.decode(GetConvar('es_extended', '{}'))
+
+-- Convar overrides (add to server.cfg)
+--[[
+setr primary_identifier "license"
+setr es_extended {
+  "Multichar": true,
+  "NPWD": true,
+  "EnableHud": false
+}
+]]
+
+Config = {
+	Locale = Config.Locale or 'en',
+	StartingAccountMoney = Config.StartingAccountMoney or {bank = 50000},
+
+	-- Players receive payment from their employer society account (requires: esx_society)
+	EnableSocietyPayouts = Config.EnableSocietyPayouts or false,
+
+	-- Display the default hud, showing current job and accounts
+	EnableHud = Config.EnableHud or true,
+
+	-- The amount of weight a player can carry
+	MaxWeight = Config.MaxWeight or 30000,
+
+	-- The frequency that paychecks are triggered by the server in milliseconds (default: 7 minutes)
+	PaycheckInterval = Config.PaycheckInterval or (7 * 60000),
+
+	-- Enable debug options
+	EnableDebug = Config.EnableDebug or false,
+
+	-- Use GTA's wanted level
+	EnableWantedLevel = Config.EnableWantedLevel or false,
+
+	-- Allow player versus player combat
+	EnablePVP = Config.EnablePVP or true,
+
+	-- Enable compatability for esx_multicharacter
+	Multichar = Config.Multichar or false,
+
+	-- Load character identity data during initial player loading (requires: esx_identity, not required with Config.Multichar)
+	Identity = Config.Identity or false,
+
+	-- Enable support when using NPWD
+	NPWD = Config.NPWD or false,
+}
+
+_G.Config = Config
 
 Config.Accounts = {
 	bank = _U('account_bank'),
@@ -7,32 +53,5 @@ Config.Accounts = {
 	money = _U('account_money')
 }
 
-Config.StartingAccountMoney 	= {bank = 50000}
-
-Config.EnableSocietyPayouts 	= false -- pay from the society account that the player is employed at? Requirement: esx_society
-Config.EnableHud            	= true -- enable the default hud? Display current job and accounts (black, bank & cash)
-Config.MaxWeight            	= 30000   -- the max inventory weight without backpack
-Config.PaycheckInterval         = 7 * 60000 -- how often to recieve pay checks in milliseconds
-Config.EnableDebug              = false -- Use Debug options?
-Config.EnableWantedLevel    	= false -- Use Normal GTA wanted Level?
-Config.EnablePVP                = true -- Allow Player to player combat
-
--- Enable support for esx_multicharacter
-Config.Multichar                = false
-
--- Select a characters identity data before they have loaded in (this happens by default with multichar)
-Config.Identity                 = false
-
--- Set the default identifier to use for players (recommended: license)
-Config.Identifier               = 'license'
-
-
-
-----------------
--- Compatibility
-----------------
--- Communicate with NPWD after xPlayer creation
-Config.NPWD               = false
-
 -- Set identifier to ip when using FxDK or sv_lan
-Config.Identifier         = GetConvar('sv_lan', '') == 'true' and 'ip' or Config.Identifier
+Config.Identifier = GetConvar('sv_lan', '') == 'true' and 'ip' or GetConvar('primary_identifier', 'license')

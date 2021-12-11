@@ -1,12 +1,24 @@
-local Config = json.decode(GetConvar('es_extended', '{}'))
+local function loadConvar(name)
+	local convar = json.decode(GetConvar(name, '{}'))
+	if type(convar) == 'nil' then
+		CreateThread(function()
+			error(('^1Convar setting `%s` is malformed, ensure you are using a valid JSON format.^0'):format(name))
+		end)
+	end
+	return convar or {}
+end
+
+local Config = loadConvar('es_extended')
 
 -- Convar overrides (add to server.cfg)
 --[[
 setr primary_identifier "license"
+
 setr es_extended {
   "Multichar": true,
   "NPWD": true,
-  "EnableHud": false
+  "EnableHud": false,
+  "StartingAccountMoney": {"bank":500}
 }
 ]]
 
@@ -18,7 +30,7 @@ Config = {
 	EnableSocietyPayouts = Config.EnableSocietyPayouts or false,
 
 	-- Display the default hud, showing current job and accounts
-	EnableHud = Config.EnableHud or true,
+	EnableHud = Config.EnableHud or false,
 
 	-- The amount of weight a player can carry
 	MaxWeight = Config.MaxWeight or 30000,

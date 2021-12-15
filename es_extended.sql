@@ -1,4 +1,11 @@
 CREATE DATABASE IF NOT EXISTS `es_extended`;
+
+ALTER DATABASE es_extended
+	DEFAULT CHARACTER SET UTF8MB4;
+	
+ALTER DATABASE es_extended
+	DEFAULT COLLATE UTF8MB4_UNICODE_CI;
+
 USE `es_extended`;
 
 CREATE TABLE `users` (
@@ -11,7 +18,7 @@ CREATE TABLE `users` (
 	`position` VARCHAR(255) NOT NULL DEFAULT '{"x":-269.4,"y":-955.3,"z":31.2,"heading":205.8}',
 
 	PRIMARY KEY (`identifier`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 
 CREATE TABLE `items` (
@@ -22,7 +29,7 @@ CREATE TABLE `items` (
 	`can_remove` TINYINT NOT NULL DEFAULT 1,
 
 	PRIMARY KEY (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 
 CREATE TABLE `job_grades` (
@@ -36,7 +43,7 @@ CREATE TABLE `job_grades` (
 	`skin_female` LONGTEXT NOT NULL,
 
 	PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 
 INSERT INTO `job_grades` VALUES (1,'unemployed',0,'unemployed','Unemployed',200,'{}','{}');
@@ -46,7 +53,7 @@ CREATE TABLE `jobs` (
 	`label` VARCHAR(50) DEFAULT NULL,
 
 	PRIMARY KEY (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 
 INSERT INTO `jobs` VALUES ('unemployed','Unemployed');

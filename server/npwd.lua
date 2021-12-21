@@ -14,7 +14,7 @@ if GetResourceState('npwd') ~= 'missing' then
         })
     end)
 
-    AddEventHandler('esx:playerDropped', function(playerId)
+    AddEventHandler('esx:playerLogout', function(playerId)
         exports.npwd:unloadPlayer(playerId)
     end)
 

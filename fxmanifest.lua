@@ -14,6 +14,7 @@ shared_scripts {
 }
 
 server_scripts {
+	'@mysql-async/lib/MySQL.lua',
 	'server/common.lua',
 	'server/classes/player.lua',
 	'server/functions.lua',

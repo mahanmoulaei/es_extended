@@ -36,9 +36,7 @@ function onPlayerJoined(playerId)
 		if ESX.GetPlayerFromIdentifier(identifier) then
 			DropPlayer(playerId, ('there was an error loading your character!\nError code: identifier-active-ingame\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same Rockstar account.\n\nYour Rockstar identifier: %s'):format(identifier))
 		else
-			exports.oxmysql:prepare('SELECT 1 FROM users WHERE identifier = ?', {
-				{identifier}
-			}, function(result)
+			MySQL.Async.prepare('SELECT 1 FROM users WHERE identifier = ?', {identifier},function(result)
 				if result then
 					loadESXPlayer(identifier, playerId, false)
 				else createESXPlayer(identifier, playerId) end
@@ -64,15 +62,15 @@ function createESXPlayer(identifier, playerId, data)
 	end
 
 	if not Config.Multichar then
-		exports.oxmysql:prepare(NewPlayer, {{
+		MySQL.Async.prepare(NewPlayer, {
 			json.encode(accounts),
 			identifier,
 			defaultGroup,
-		}}, function()
+		}, function()
 			loadESXPlayer(identifier, playerId, true)
 		end)
 	else
-		exports.oxmysql:prepare(NewPlayer, {{
+		MySQL.Async.prepare(NewPlayer, {
 			json.encode(accounts),
 			identifier,
 			defaultGroup,
@@ -81,7 +79,7 @@ function createESXPlayer(identifier, playerId, data)
 			data.dateofbirth,
 			data.sex,
 			data.height,
-		}}, function()
+		}, function()
 			loadESXPlayer(identifier, playerId, true)
 		end)
 	end
@@ -111,7 +109,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 		job = {},
 		playerName = GetPlayerName(playerId)
 	}
-	exports.oxmysql:prepare(LoadPlayer, {{ identifier }}, function(result)
+	MySQL.Async.prepare(LoadPlayer, { identifier }, function(result)
 		local foundAccounts, job, grade, jobObject, gradeObject = {}, result.job, result.job_grade, nil, nil
 		local Player = Player(playerId).state
 

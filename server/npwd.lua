@@ -23,7 +23,7 @@ if GetResourceState('npwd') ~= 'missing' then
         while GetResourceState('npwd') ~= 'started' and count < 100 do Wait(0) count += 1 end
 
         local phoneNumber = exports.npwd:generatePhoneNumber()
-        exports.oxmysql:update('UPDATE users SET phone_number = ? WHERE identifier = ?', { phoneNumber, identifier })
+        MySQL.Async.execute('UPDATE users SET phone_number = ? WHERE identifier = ?', { phoneNumber, identifier })
         return phoneNumber
     end
 

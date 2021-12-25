@@ -189,11 +189,11 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
 	end
 
 	self.addInventoryItem = function(name, count, metadata, slot)
-		Inventory.AddItem(self.source, name, count, metadata, slot)
+		Inventory.AddItem(self.source, name, count or 1, metadata, slot)
 	end
 
 	self.removeInventoryItem = function(name, count, metadata)
-		Inventory.RemoveItem(self.source, name, count, metadata)
+		Inventory.RemoveItem(self.source, name, count or 1, metadata)
 	end
 
 	self.setInventoryItem = function(name, count, metadata)
@@ -218,7 +218,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
 
 	self.setMaxWeight = function(newWeight)
 		self.maxWeight = newWeight
-		return exports.ox_inventory:Inventory(self.source):set('maxWeight', newWeight)
+		return Inventory.Set(self.source, 'maxWeight', newWeight)
 	end
 
 	self.setJob = function(job, grade)
@@ -267,6 +267,8 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
 			print(('[es_extended] [^3WARNING^7] Ignoring invalid .setJob() usage for "%s"'):format(self.identifier))
 		end
 	end
+
+	self.getLoadout = function() return {} end
 
 	self.showNotification = function(msg)
 		self.triggerEvent('esx:showNotification', msg)

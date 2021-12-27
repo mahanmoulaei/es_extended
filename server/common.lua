@@ -18,13 +18,13 @@ end)
 
 Core.LoadJobs = function()
 	local Jobs = {}
-	MySQL.Async.fetchAll('SELECT * FROM jobs', function(jobs)
+	MySQL.query('SELECT * FROM jobs', function(jobs)
 		for _, v in pairs(jobs) do
 			Jobs[v.name] = v
 			Jobs[v.name].grades = {}
 		end
 
-		MySQL.Async.fetchAll('SELECT * FROM job_grades', function(grades)
+		MySQL.query('SELECT * FROM job_grades', function(grades)
 			for _, v in pairs(grades) do
 				if Jobs[v.job_name] then
 					Jobs[v.job_name].grades[v.grade] = v

@@ -152,7 +152,7 @@ Core.TriggerServerCallback = function(name, requestId, source, cb, ...)
 end
 
 Core.SavePlayer = function(xPlayer, cb)
-	MySQL.Async.prepare("UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ? WHERE `identifier` = ?", {{
+	MySQL.prepare("UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ? WHERE `identifier` = ?", {{
 		json.encode(xPlayer.getAccounts(true)),
 		xPlayer.job.name,
 		xPlayer.job.grade,
@@ -186,7 +186,7 @@ Core.SavePlayers = function(cb)
 				xPlayer.identifier
 			}
 		end
-		MySQL.Async.prepare("UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ? WHERE `identifier` = ?", parameters,
+		MySQL.prepare("UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ? WHERE `identifier` = ?", parameters,
 		function(results)
 			if results then
 				if type(cb) == 'function' then cb() else print(('[^2INFO^7] Saved %s %s over %s ms'):format(count, count > 1 and 'players' or 'player', (os.nanotime() - time) / 1000000)) end

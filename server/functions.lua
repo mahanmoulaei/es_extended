@@ -268,7 +268,7 @@ ESX.GetUsableItems = function()
 end
 
 ESX.DoesJobExist = function(job, grade)
-	if job and grade and ESX.Jobs[job] and ESX.Jobs[job].grades[tonumber(grade)] then
+	if job and grade and ESX.Jobs[job] and ESX.Jobs[job].grades[tostring(grade)] then
 		return true
 	end
 	return false

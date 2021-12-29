@@ -157,3 +157,12 @@ end, true)
 ESX.RegisterCommand('loadjobs', 'admin', function()
 	Core.LoadJobs()
 end, true)
+
+
+ESX.RegisterServerCallback('esx:admincommand', function(source, cb)
+	if Core.IsPlayerAdmin(source) then
+		return cb(true)
+	end
+
+	cb(false)
+end)

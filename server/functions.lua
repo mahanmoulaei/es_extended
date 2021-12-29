@@ -275,5 +275,16 @@ ESX.DoesJobExist = function(job, grade)
 end
 
 Core.IsPlayerAdmin = function(playerId)
-	return (IsPlayerAceAllowed(playerId, 'command') or GetConvar('sv_lan', '') == 'true') and true or false
+	if (IsPlayerAceAllowed(playerId, 'command') or GetConvar('sv_lan', '') == 'true') and true or false then
+		return true
+	end
+
+	local xPlayer = ESX.GetPlayerFromId(playerId)
+	if xPlayer then
+		if xPlayer.group == 'admin' or xPlayer.group == 'superadmin' then
+			return true
+		end
+	end
+
+	return false
 end

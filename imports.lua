@@ -2,28 +2,12 @@ ESX = exports['es_extended']:getSharedObject()
 ------------------------------------------------------------------------
 -- SHARED
 ------------------------------------------------------------------------
-local Intervals = {}
-SetInterval = function(id, msec, callback, onclear)
-	if not Intervals[id] and msec then
-		Intervals[id] = msec
-		CreateThread(function()
-			repeat
-				local interval = Intervals[id]
-				Wait(interval)
-				callback(interval)
-			until interval == -1 and (onclear and onclear() or true)
-			Intervals[id] = nil
-		end)
-	elseif msec then Intervals[id] = msec end
-end
-
-ClearInterval = function(id)
-	if Intervals[id] then Intervals[id] = -1 end
-end
+-- Setup imported functions to use on your server
 
 ------------------------------------------------------------------------
 if IsDuplicityVersion() then
 ------------------------------------------------------------------------
+-- Setup imported functions to use on your server
 
 ------------------------------------------------------------------------
 else -- CLIENT

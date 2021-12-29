@@ -10,7 +10,8 @@ end
 
 local Config = loadConvar('es_extended')
 
--- Convar overrides (add to server.cfg)
+-- Convar overrides (add to server.cfg or use exec)
+-- Optional of course, you can just set them in here if you prefer
 --[[
 setr primary_identifier "license"
 
@@ -57,7 +58,7 @@ Config = {
 	NPWD = Config.NPWD or false,
 }
 
-_G.Config = Config
+_ENV.Config = Config
 
 Config.Accounts = {
 	bank = _U('account_bank'),

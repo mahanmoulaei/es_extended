@@ -16,6 +16,7 @@ CREATE TABLE `users` (
 	`job` VARCHAR(20) NULL DEFAULT 'unemployed',
 	`job_grade` INT NULL DEFAULT 0,
 	`position` VARCHAR(255) NOT NULL DEFAULT '{"x":-269.4,"y":-955.3,"z":31.2,"heading":205.8}',
+	`phone_number` VARCHAR(20) DEFAULT NULL,
 
 	PRIMARY KEY (`identifier`)
 );

@@ -749,8 +749,10 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 end
 
 ESX.Game.Utils.DrawText3D = function(coords, text, size, font)
+	coords = type(coords) == 'vector3' and coords or type(coords) == 'table' and vec3(coords.x, coords.y, coords.z) or error('expected xyz coordinates when drawing text, received '..type(coords))
+
 	local camCoords = GetGameplayCamCoords()
-	local distance = #(vector - camCoords)
+	local distance = #(coords - camCoords)
 
 	if not size then size = 1 end
 	if not font then font = 0 end

@@ -4,7 +4,7 @@
 - Removes garbage tables from the ESX table that is normally transferred to other resources and never referenced.
 - Removes the async resource which creates unncessary threads.
 - Upgrade from mysql-async to oxmysql.
-- Enables CfxLua 5.4 and fxv2 oal.
+- Enables CfxLua 5.4.
 - Replaces several outdated functions with natives or language functions.
 - Adds support for registering commands for jobs `(ESX.RegisterCommand('police'))`
 - Adds several server-side OneSync only functions

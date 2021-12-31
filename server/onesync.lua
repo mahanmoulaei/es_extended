@@ -1,10 +1,17 @@
 ESX.OneSync = {}
 
+---@param source vector|number either coordinates to originate from, or a player id
+---@param closest boolean
+---@param distance number
+---@param ignore boolean 
+---@return table
 function ESX.OneSync.Players(source, closest, distance, ignore)
 	local result = {}
 	local count = 0
 	if not distance then distance = 100 end
-	if type(source) == 'number' then source = GetEntityCoords(source) end
+	if type(source) == 'number' then
+		source = GetEntityCoords(GetPlayerPed(source))
+	end
 
 	for _, xPlayer in pairs(ESX.Players) do
 		if not ignore or not ignore[xPlayer.source] then
@@ -64,9 +71,16 @@ end
 ESX.OneSync.SpawnPed = function(model, coords, heading, cb)
 	if type(model) == 'string' then model = GetHashKey(model) end
 	CreateThread(function()
-		-- Set coords as vehicle and heading as seat to instead spawn the ped inside a vehicle
-		local entity = type(coords) == 'number' and CreatePedInsideVehicle(coords, 1, heading, true, true)
-			or CreatePed(0, model, coords.x, coords.y, coords.z, heading, true, true)
+		local entity = CreatePed(0, model, coords.x, coords.y, coords.z, heading, true, true)
+		while not DoesEntityExist(entity) do Wait(20) end
+		cb(entity)
+	end)
+end
+
+ESX.OneSync.SpawnPedInVehicle = function(model, vehicle, seat, cb)
+	if type(model) == 'string' then model = GetHashKey(model) end
+	CreateThread(function()
+		local entity = CreatePedInsideVehicle(vehicle, 1, model, seat, true, true)
 		while not DoesEntityExist(entity) do Wait(20) end
 		cb(entity)
 	end)

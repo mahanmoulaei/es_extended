@@ -247,7 +247,7 @@ RegisterNetEvent('esx:noclip', function()
 				noclip = false
 			end
 
-			TriggerEvent('chat:addMessage', ('Noclip has been %s'):format(noclip and 'disabled' or 'enabled'))
+			TriggerEvent('chat:addMessage', ('Noclip has been %s'):format(noclip and 'enabled' or 'disabled'))
 		end
 	end)
 end)

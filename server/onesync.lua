@@ -54,7 +54,7 @@ ESX.OneSync.SpawnVehicle = function(model, coords, heading, cb)
 	if type(model) == 'string' then model = GetHashKey(model) end
 	CreateThread(function()
 		local entity = Citizen.InvokeNative(`CREATE_AUTOMOBILE`, model, coords.x, coords.y, coords.z, heading)
-		while not DoesEntityExist(entity) do Wait(20) end
+		while not DoesEntityExist(entity) do Wait(50) end
 		cb(entity)
 	end)
 end
@@ -63,7 +63,7 @@ ESX.OneSync.SpawnObject = function(model, coords, heading, cb)
 	if type(model) == 'string' then model = GetHashKey(model) end
 	CreateThread(function()
 		CreateObject(model, coords, heading, true, true)
-		while not DoesEntityExist(entity) do Wait(20) end
+		while not DoesEntityExist(entity) do Wait(50) end
 		cb(entity)
 	end)
 end
@@ -72,7 +72,7 @@ ESX.OneSync.SpawnPed = function(model, coords, heading, cb)
 	if type(model) == 'string' then model = GetHashKey(model) end
 	CreateThread(function()
 		local entity = CreatePed(0, model, coords.x, coords.y, coords.z, heading, true, true)
-		while not DoesEntityExist(entity) do Wait(20) end
+		while not DoesEntityExist(entity) do Wait(50) end
 		cb(entity)
 	end)
 end
@@ -81,7 +81,7 @@ ESX.OneSync.SpawnPedInVehicle = function(model, vehicle, seat, cb)
 	if type(model) == 'string' then model = GetHashKey(model) end
 	CreateThread(function()
 		local entity = CreatePedInsideVehicle(vehicle, 1, model, seat, true, true)
-		while not DoesEntityExist(entity) do Wait(20) end
+		while not DoesEntityExist(entity) do Wait(50) end
 		cb(entity)
 	end)
 end

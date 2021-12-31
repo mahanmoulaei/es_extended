@@ -182,63 +182,10 @@ RegisterNetEvent('esx:setJob', function(Job)
 	ESX.SetPlayerData('job', Job)
 end)
 
-RegisterNetEvent('esx:spawnVehicle', function(vehicle)
-	local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
-
-	if IsModelInCdimage(model) then
-		local playerPed = ESX.PlayerData.ped
-		local playerCoords, playerHeading = GetEntityCoords(playerPed), GetEntityHeading(playerPed)
-
-		ESX.Game.SpawnVehicle(model, playerCoords, playerHeading, function(vehicle)
-			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
-		end)
-	else
-		TriggerEvent('chat:addMessage', { args = { '^1SYSTEM', 'Invalid vehicle model.' } })
-	end
-end)
-
 RegisterNetEvent('esx:registerSuggestions', function(registeredCommands)
 	for name,command in pairs(registeredCommands) do
 		if command.suggestion then
 			TriggerEvent('chat:addSuggestion', ('/%s'):format(name), command.suggestion.help, command.suggestion.arguments)
-		end
-	end
-end)
-
-RegisterNetEvent('esx:deleteVehicle', function(radius)
-	local playerPed = ESX.PlayerData.ped
-	if radius and tonumber(radius) then
-		radius = tonumber(radius) + 0.01
-		local vehicles = ESX.Game.GetVehiclesInArea(GetEntityCoords(playerPed), radius)
-
-		for k,entity in ipairs(vehicles) do
-			local attempt = 0
-
-			while not NetworkHasControlOfEntity(entity) and attempt < 100 and DoesEntityExist(entity) do
-				Wait(100)
-				NetworkRequestControlOfEntity(entity)
-				attempt = attempt + 1
-			end
-
-			if DoesEntityExist(entity) and NetworkHasControlOfEntity(entity) then
-				ESX.Game.DeleteVehicle(entity)
-			end
-		end
-	else
-		local vehicle, attempt = ESX.Game.GetVehicleInDirection(), 0
-
-		if IsPedInAnyVehicle(playerPed, true) then
-			vehicle = GetVehiclePedIsIn(playerPed, false)
-		end
-
-		while not NetworkHasControlOfEntity(vehicle) and attempt < 100 and DoesEntityExist(vehicle) do
-			Wait(100)
-			NetworkRequestControlOfEntity(vehicle)
-			attempt = attempt + 1
-		end
-
-		if DoesEntityExist(vehicle) and NetworkHasControlOfEntity(vehicle) then
-			ESX.Game.DeleteVehicle(vehicle)
 		end
 	end
 end)

@@ -22,17 +22,32 @@ end, true, {help = _U('command_setjob'), validate = true, arguments = {
 }})
 
 ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
-	local vehicle = GetVehiclePedIsIn(GetPlayerPed(xPlayer.source))
+	local playerPed = GetPlayerPed(xPlayer.source)
+	local vehicle = GetVehiclePedIsIn(playerPed)
 	if vehicle then DeleteEntity(vehicle) end
-	if not args.car then args.car = 'baller2' end
-	xPlayer.triggerEvent('esx:spawnVehicle', args.car)
+	if not args.car then args.car = `baller2` end
+
+	ESX.OneSync.SpawnVehicle(args.car, GetEntityCoords(playerPed), GetEntityHeading(playerPed), function(car)
+		Wait(0)
+		SetPedIntoVehicle(playerPed, car, -1)
+	end)
+
 end, false, {help = _U('command_car'), validate = false, arguments = {
 	{name = 'car', help = _U('command_car_car'), type = 'any'}
 }})
 
 ESX.RegisterCommand({'cardel', 'dv'}, 'admin', function(xPlayer, args, showError)
-	if not args.radius then args.radius = 4 end
-	xPlayer.triggerEvent('esx:deleteVehicle', args.radius)
+	local playerPed = GetPlayerPed(xPlayer.source)
+	local vehicle = GetVehiclePedIsIn(playerPed)
+
+	if vehicle ~= 0 then
+		DeleteEntity(vehicle)
+	else
+		vehicle = ESX.OneSync.GetVehiclesInArea(GetEntityCoords(playerPed), tonumber(args.radius) or 3)
+		for i = 1, #vehicle do
+			DeleteEntity(vehicle[i].entity)
+		end
+	end
 end, false, {help = _U('command_cardel'), validate = false, arguments = {
 	{name = 'radius', help = _U('command_cardel_radius'), type = 'any'}
 }})

@@ -1,7 +1,7 @@
 <h1 align='center'>ESX Legacy - Overextended</a></h1>
 
 
-#### A fork of ESX Legacy for compatibility with [Ox Inventory](https://github.com/overextended/ox_inventory), and export triggers for [NPWD](https://github.com/project-error/new-phone-who-dis)
+#### A fork of ESX Legacy for compatibility with [Ox Inventory](https://github.com/overextended/ox_inventory), and built-in support for [NPWD](https://github.com/project-error/new-phone-who-dis)
 This is likely to break compatibility with some resources if they rely on removed features (i.e. loadouts, the standard inventory menu), or directly access ESX tables that have been removed from the exported ESX object. I'm also not really concerned with the general cleanliness/organisation of the repo, and did move some functions around arbitarily for the fraction of an improvement to memory and CPU usage.
 
 

@@ -8,6 +8,17 @@ This is likely to break compatibility with some resources if they rely on remove
 We don't intend on actively updating or adding new features, but are always open to non-breaking pull requests and fixes.
 
 
+
+## Compatibility issues
+- Loadouts do not exist, and inventory data-structure is altered
+- Player inventory is not stored as an array, but rather key-value pairs based on slot
+	- you will need to use pairs over ipairs and for loops
+- ESX.Items no longer exists, and such information should be retrieved with `exports.ox_inventory:Items()`
+- If you encounter an issue then [post the relevant information](https://github.com/overextended/es_extended/issues/new).  
+
+
+
+## Non-breaking changes
 - Upgrade to oxmysql MySQL syntax and functions
 - Agressive use of prepared statements when loading and saving players
 - Remove dependency on the [async](https://github.com/esx-framework/async) resource (it's awful)
@@ -46,11 +57,6 @@ self.hasWeaponComponent
 self.hasWeapon
 self.getWeapon
 ```
-
-#### Compatibility issues
-- Loadouts do not exist, and inventory data-structure is altered
-- ESX.Items no longer exists, and such information should be retrieved with `exports.ox_inventory:Items()`
-- If you encounter an issue then [post the relevant information](https://github.com/overextended/es_extended/issues/new).  
 
 
 

@@ -1,21 +1,66 @@
 <h1 align='center'>ESX Legacy - Overextended</a></h1>
 
-##### The Overextended fork provides compatibility for Ox Inventory, several enhancements, features, and bug fixes.
-- Removes garbage tables from the ESX table that is normally transferred to other resources and never referenced.
-- Removes the async resource which creates unncessary threads.
-- Upgrade from mysql-async to oxmysql.
-- Enables CfxLua 5.4.
-- Replaces several outdated functions with natives or language functions.
-- Adds support for registering commands for jobs `(ESX.RegisterCommand('police'))`
-- Adds several server-side OneSync only functions
 
-#### Known compatibility issues
-- There are no known compatibility issues aside from those caused by Ox Inventory.  
-- Refer to [this page](https://overextended.github.io/ox_inventory/#installation) for more information.  
+#### A fork of ESX Legacy for compatibility with [Ox Inventory](https://github.com/overextended/ox_inventory), and export triggers for [NPWD](https://github.com/project-error/new-phone-who-dis)
+This is likely to break compatibility with some resources if they rely on removed features (i.e. loadouts, the standard inventory menu), or directly access ESX tables that have been removed from the exported ESX object. I'm also not really concerned with the general cleanliness/organisation of the repo, and did move some functions around arbitarily for the fraction of an improvement to memory and CPU usage.
+
+
+We don't intend on actively updating or adding new features, but are always open to non-breaking pull requests and fixes.
+
+
+- Upgrade to oxmysql MySQL syntax and functions
+- Agressive use of prepared statements when loading and saving players
+- Remove dependency on the [async](https://github.com/esx-framework/async) resource (it's awful)
+- Removed several _internal_ functions and tables from the `ESX` table
+```
+client: CurrentRequestId, ServerCallbacks, TimeoutCallbacks
+server: RegisteredCommands, SavePlayer, SavePlayers
+server: UsableItemsCallbacks, TimeoutCount, CancelledTimeouts
+server: ServerCallbacks, TriggerServerCallback
+```
+
+- Added a few OneSync RPC functions, which should operate somewhat similarly to the client versions
+- Remove the exploitable spawnVehicle and deleteVehicle events from the client (updated commands to use RPC)
+- Added new functions to the shared object
+```
+ESX.GetJobs
+ESX.GetUsableItems
+```
+
+- Integrated support for New Phone Who Dis (you still need to change config)
+- Overcomplicated convars, to get people used to the idea
+- Adds principal permissions for a players job
+- Removes the functionality of several xPlayer functions (placeholders left for compatibility)
+```
+self.getLoadout
+self.addWeapon
+self.addWeaponComponent
+self.addWeaponAmmo
+self.updateWeaponAmmo
+self.setWeaponTint
+self.getWeaponTint
+self.removeWeapon
+self.removeWeaponComponent
+self.removeWeaponAmmo
+self.hasWeaponComponent
+self.hasWeapon
+self.getWeapon
+```
+
+#### Compatibility issues
+- Loadouts do not exist, and inventory data-structure is altered
+- ESX.Items no longer exists, and such information should be retrieved with `exports.ox_inventory:Items()`
 - If you encounter an issue then [post the relevant information](https://github.com/overextended/es_extended/issues/new).  
 
 
-<br><br><br><br><br><br><h1 align='center'>ESX Legacy</a></h1><p align='center'><b><a href='https://discord.gg/cNx6HF9P5J'>Development Discord</a> - <a href='https://esx-framework.org/'>Website</a> - <a href='https://discord.gg/J6VqFPwvVp'>Support Discord</a></b></h5>
+
+
+
+
+
+
+
+<br><br><br><br><br><br><h1 align='center'>ESX Legacy</a></h1>
 
 
 ##### ESX is the most popular framework for creating economy-based roleplay servers on FiveM, with many official and community resources designed to utilise the tools provided here. For a taste of what's available:
@@ -34,7 +79,6 @@ Many more resources are included in this repository, or you can browse the [ESX 
 ### Information
 ##### Legacy provides some necessary bug-fixes and improvements to optimise the framework before reaching the end of official support by the development team.
 ##### Most resources designed for 1.2 will have no issues with Legacy, notable exceptions are those which modify spawning/loading behaviour.   There are several minor feature updates which do not impact compatibility with old resources.  
-##### NOTE: The loadouts system in ESX has always been problematic, and fixing it would require a complete overhaul. Your best option is to use a resource that handles weapons as items.
 
 #### Optimisation
 - Utilise compile-time jenkins hashing over the GetHashKey native

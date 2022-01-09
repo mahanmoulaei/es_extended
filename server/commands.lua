@@ -28,8 +28,10 @@ ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
 	if not args.car then args.car = `baller2` end
 
 	ESX.OneSync.SpawnVehicle(args.car, GetEntityCoords(playerPed), GetEntityHeading(playerPed), function(car)
-		Wait(0)
-		SetPedIntoVehicle(playerPed, car, -1)
+		while GetVehiclePedIsIn(playerPed) ~= car do
+			Wait(0)
+			SetPedIntoVehicle(playerPed, car, -1)
+		end
 	end)
 
 end, false, {help = _U('command_car'), validate = false, arguments = {

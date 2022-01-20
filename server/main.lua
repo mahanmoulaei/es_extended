@@ -199,7 +199,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 		Player.admin = Core.IsPlayerAdmin(playerId)
 
 		-- Create xPlayer object
-		local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.group, userData.accounts, userData.job, userData.playerName, userData.coords)
+		local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.group, userData.accounts, userData.job, userData.playerName, userData.coords, userData.inventory)
 		ESX.Players[playerId] = xPlayer
 
 		if userData.firstname then

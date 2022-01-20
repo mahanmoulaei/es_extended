@@ -6,13 +6,13 @@ end)
 local function emptytable() return {} end
 local function emptyfn() end
 
-function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, coords)
+function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, coords, inventory)
 	local self = {
 		accounts = accounts,
 		coords = coords,
 		group = group,
 		identifier = identifier,
-		inventory = {},
+		inventory = inventory,
 		job = job,
 		name = name,
 		playerId = playerId,

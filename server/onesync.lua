@@ -62,8 +62,9 @@ end
 ESX.OneSync.SpawnObject = function(model, coords, heading, cb)
 	if type(model) == 'string' then model = GetHashKey(model) end
 	CreateThread(function()
-		CreateObject(model, coords, heading, true, true)
+		local entity = CreateObject(model, coords, true, true)
 		while not DoesEntityExist(entity) do Wait(50) end
+		SetEntityHeading(entity, heading)
 		cb(entity)
 	end)
 end

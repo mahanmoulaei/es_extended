@@ -456,20 +456,20 @@ local EnumerateEntitiesWithinDistance = function(entities, isPlayerEntities, coo
 	return nearbyEntities
 end
 
-ESX.Game.GetClosestObject = function(coords, modelFilter)
-	return ESX.Game.GetClosestEntity(ESX.Game.GetObjects(), false, coords, modelFilter)
+ESX.Game.GetClosestObject = function(coords, modelFilter, maxDistance)
+	return ESX.Game.GetClosestEntity(ESX.Game.GetObjects(), false, coords, modelFilter, maxDistance)
 end
 
-ESX.Game.GetClosestPed = function(coords, modelFilter)
-	return ESX.Game.GetClosestEntity(ESX.Game.GetPeds(true), false, coords, modelFilter)
+ESX.Game.GetClosestPed = function(coords, modelFilter, maxDistance)
+	return ESX.Game.GetClosestEntity(ESX.Game.GetPeds(true), false, coords, modelFilter, maxDistance)
 end
 
-ESX.Game.GetClosestPlayer = function(coords)
-	return ESX.Game.GetClosestEntity(ESX.Game.GetPlayers(true, true), true, coords, nil)
+ESX.Game.GetClosestPlayer = function(coords, maxDistance)
+	return ESX.Game.GetClosestEntity(ESX.Game.GetPlayers(true, true), true, coords, nil, maxDistance)
 end
 
-ESX.Game.GetClosestVehicle = function(coords, modelFilter)
-	return ESX.Game.GetClosestEntity(ESX.Game.GetVehicles(), false, coords, modelFilter)
+ESX.Game.GetClosestVehicle = function(coords, modelFilter, maxDistance)
+	return ESX.Game.GetClosestEntity(ESX.Game.GetVehicles(), false, coords, modelFilter, maxDistance)
 end
 
 ESX.Game.GetPlayersInArea = function(coords, maxDistance)
@@ -485,8 +485,8 @@ ESX.Game.IsSpawnPointClear = function(coords, maxDistance)
 end
 
 
-ESX.Game.GetClosestEntity = function(entities, isPlayerEntities, coords, modelFilter)
-	local closestEntity, closestEntityDistance, filteredEntities = -1, -1, nil
+ESX.Game.GetClosestEntity = function(entities, isPlayerEntities, coords, modelFilter, maxDistance)
+	local closestEntity, closestEntityDistance, filteredEntities = -1, maxDistance or -1, nil
 
 	if coords then
 		coords = vector3(coords.x, coords.y, coords.z)
@@ -497,7 +497,7 @@ ESX.Game.GetClosestEntity = function(entities, isPlayerEntities, coords, modelFi
 	if modelFilter then
 		filteredEntities = {}
 
-		for k,entity in pairs(entities) do
+		for _,entity in pairs(entities) do
 			if modelFilter[GetEntityModel(entity)] then
 				table.insert(filteredEntities, entity)
 			end

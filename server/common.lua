@@ -92,5 +92,7 @@ SetInterval(function()
 	end
 end, Config.PaycheckInterval)
 
-Core.LoadJobs()
-print('[^2INFO^7] ESX ^5Legacy^0 initialized')
+MySQL.ready(function()
+	Core.LoadJobs()
+	print('[^2INFO^7] ESX ^5Legacy^0 initialized')
+end)

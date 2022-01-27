@@ -25,13 +25,14 @@ ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
 	local playerPed = GetPlayerPed(xPlayer.source)
 	local vehicle = GetVehiclePedIsIn(playerPed)
 	if vehicle then DeleteEntity(vehicle) end
-	if not args.car then args.car = `baller2` end
 
-	ESX.OneSync.SpawnVehicle(args.car, GetEntityCoords(playerPed), GetEntityHeading(playerPed), function(car)
-		while GetVehiclePedIsIn(playerPed) ~= car do
+	ESX.OneSync.SpawnVehicle(args.car or `baller2`, GetEntityCoords(playerPed), GetEntityHeading(playerPed), function(car)
+		local timeout = 50
+		repeat
 			Wait(0)
+			timeout -= 1
 			SetPedIntoVehicle(playerPed, car, -1)
-		end
+		until GetVehiclePedIsIn(playerPed, false) ~= 0 or timeout < 1
 	end)
 
 end, false, {help = _U('command_car'), validate = false, arguments = {

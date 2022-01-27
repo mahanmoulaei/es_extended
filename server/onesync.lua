@@ -55,11 +55,10 @@ ESX.OneSync.SpawnVehicle = function(model, coords, heading, cb)
 	CreateThread(function()
 		local entity = Citizen.InvokeNative(`CREATE_AUTOMOBILE`, model, coords.x, coords.y, coords.z, heading)
 		while not DoesEntityExist(entity) do Wait(50) end
-		cb(entity)
 
 		local ped = GetPedInVehicleSeat(entity, -1)
 		if ped > 0 then
-			for i=-1, 6 do
+			for i = -1, 6 do
 				ped = GetPedInVehicleSeat(entity, i)
 				local popType = GetEntityPopulationType(ped)
 				if popType <= 5 or popType >= 1 then
@@ -67,6 +66,8 @@ ESX.OneSync.SpawnVehicle = function(model, coords, heading, cb)
 				end
 			end
 		end
+
+		cb(entity)
 	end)
 end
 

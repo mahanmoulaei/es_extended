@@ -534,6 +534,8 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 	if DoesEntityExist(vehicle) then
 		local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
 		local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
+		local interiorColor = GetVehicleInteriorColor(vehicle)
+		local dashboardColor = GetVehicleDashboardColor(vehicle)
 		
 		local hasCustomPrimaryColor = GetIsVehiclePrimaryColourCustom(vehicle)
 		local customPrimaryColor = nil
@@ -570,14 +572,15 @@ ESX.Game.GetVehicleProperties = function(vehicle)
 
 			fuelLevel         = ESX.Math.Round(GetVehicleFuelLevel(vehicle), 1),
 			dirtLevel         = ESX.Math.Round(GetVehicleDirtLevel(vehicle), 1),
+
 			color1            = colorPrimary,
 			color2            = colorSecondary,
-			
 			customPrimaryColor = customPrimaryColor,
 			customSecondaryColor = customSecondaryColor,
-
 			pearlescentColor  = pearlescentColor,
 			wheelColor        = wheelColor,
+			interiorColor 	  = interiorColor,
+			dashboardColor 	  = dashboardColor,
 
 			wheels            = GetVehicleWheelType(vehicle),
 			windowTint        = GetVehicleWindowTint(vehicle),
@@ -655,6 +658,8 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 	if DoesEntityExist(vehicle) then
 		local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
 		local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
+		local interiorColor = GetVehicleInteriorColor(vehicle)
+		local dashboardColor = GetVehicleDashboardColor(vehicle)
 		SetVehicleModKit(vehicle, 0)
 
 		if props.plate then SetVehicleNumberPlateText(vehicle, props.plate) end
@@ -670,6 +675,8 @@ ESX.Game.SetVehicleProperties = function(vehicle, props)
 		if props.color2 then SetVehicleColours(vehicle, props.color1 or colorPrimary, props.color2) end
 		if props.pearlescentColor then SetVehicleExtraColours(vehicle, props.pearlescentColor, wheelColor) end
 		if props.wheelColor then SetVehicleExtraColours(vehicle, props.pearlescentColor or pearlescentColor, props.wheelColor) end
+		if props.interiorColor then SetVehicleInteriorColor(vehicle, props.interiorColor or interiorColor) end
+		if props.dashboardColor then SetVehicleDashboardColor(vehicle, props.dashboardColor or dashboardColor) end
 		if props.wheels then SetVehicleWheelType(vehicle, props.wheels) end
 		if props.windowTint then SetVehicleWindowTint(vehicle, props.windowTint) end
 

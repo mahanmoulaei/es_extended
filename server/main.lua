@@ -61,6 +61,12 @@ function createESXPlayer(identifier, playerId, data)
 		defaultGroup = 'user'
 	end
 
+	if Config.Multichar and Config.CloneGroup and not identifier:find('char1:') then
+		local char1identifier = identifier:gsub('char%d+:', 'char1:')
+		local char1 = MySQL.single.await(LoadPlayer, {char1identifier})
+		if char1 then	defaultGroup = char1.group	end
+	end
+
 	if not Config.Multichar then
 		MySQL.prepare(NewPlayer, {
 			json.encode(accounts),

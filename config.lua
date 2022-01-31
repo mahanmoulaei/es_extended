@@ -51,6 +51,9 @@ Config = {
 	-- Enable compatability for esx_multicharacter
 	Multichar = Config.Multichar or false,
 
+	-- Clone your first character's group when creating a new one (Requires esx_multicharacter enabled)
+	CloneGroup = Config.CloneGroup or false,
+
 	-- Load character identity data during initial player loading (requires: esx_identity, not required with Config.Multichar)
 	Identity = Config.Identity or false,
 

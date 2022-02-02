@@ -207,9 +207,9 @@ RegisterNetEvent('esx:tpm', function()
 
 					Wait(5)
 				end
-				TriggerEvent('chat:addMessage', 'Successfully Teleported')
+				ESX.ShowNotification('Successfully Teleported')
 			else
-				TriggerEvent('chat:addMessage', 'No Waypoint Set')
+				ESX.ShowNotification('No Waypoint Set')
 			end
 		end
 	end)
@@ -247,7 +247,7 @@ RegisterNetEvent('esx:noclip', function()
 				noclip = false
 			end
 
-			TriggerEvent('chat:addMessage', ('Noclip has been %s'):format(noclip and 'enabled' or 'disabled'))
+			ESX.ShowNotification(('Noclip has been %s'):format(noclip and 'enabled' or 'disabled'))
 		end
 	end)
 end)

@@ -157,3 +157,48 @@ end
 ESX.OneSync.GetClosestVehicle = function(coords, modelFilter)
 	return ESX.OneSync.GetClosestEntity(GetAllVehicles(), coords, modelFilter)
 end
+
+ESX.OneSync.DeleteEntity = function(entity, cb)
+	if DoesEntityExist(entity) then
+		DeleteEntity(entity)
+		if cb then
+			cb(true)
+		end
+	elseif (NetworkGetEntityFromNetworkId(entity)) then
+		DeleteEntity(NetworkGetEntityFromNetworkId(entity))
+		if cb then
+			cb(true)
+		end
+	else
+		if cb then
+			cb(false)
+		end
+	end
+end
+
+--For Calling OneSync Functions On ESX Client Side Functions -- WIP
+ESX.RegisterServerCallback('es_extended:ESX.OneSync.SpawnVehicle', function(source, cb, model, coords, heading)
+	ESX.OneSync.SpawnVehicle(model, coords, heading, function(vehicle)
+		cb(NetworkGetNetworkIdFromEntity(vehicle))
+	end)
+end)
+
+ESX.RegisterServerCallback('es_extended:ESX.OneSync.SpawnObject', function(source, cb, model, coords, heading)
+	ESX.OneSync.SpawnObject(model, coords, heading, function(object)
+		cb(NetworkGetNetworkIdFromEntity(object))
+	end)
+end)
+
+ESX.RegisterServerCallback('es_extended:ESX.OneSync.SpawnPed', function(source, cb, model, coords, heading)
+	ESX.OneSync.SpawnPed(model, coords, heading, function(ped)
+		cb(NetworkGetNetworkIdFromEntity(ped))
+	end)
+end)
+
+ESX.RegisterServerCallback('es_extended:ESX.OneSync.DeleteEntity', function(source, cb, netID)
+	ESX.OneSync.DeleteEntity(NetworkGetEntityFromNetworkId(netID), function(response)
+		if cb then
+			cb(response)
+		end
+	end)
+end)

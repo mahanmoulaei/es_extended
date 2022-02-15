@@ -14,6 +14,7 @@ ESX.UI.Menu.RegisteredTypes   = {}
 ESX.UI.Menu.Opened            = {}
 
 ESX.Game                      = {}
+ESX.Onesync                   = {}
 ESX.Game.Utils                = {}
 
 ESX.Scaleform                 = {}
@@ -774,6 +775,81 @@ ESX.Game.Utils.DrawText3D = function(coords, text, size, font)
 	SetDrawOrigin(coords.x, coords.y, coords.z, 0)
 	DrawText(0.0, 0.0)
 	ClearDrawOrigin()
+end
+
+ESX.Onesync.SpawnObject = function(object, coords, heading, cb)
+	local model = type(object) == 'number' and object or GetHashKey(object)
+	coords = type(coords) == 'vector3' and coords or type(coords) == 'table' and coords or error('expected xyz coordinates when spawning object, received '..type(coords))
+	heading = math.type(heading) == 'float' and heading or heading == nil and (GetEntityHeading(ESX.PlayerData.ped) or GetEntityHeading(PlayerPedId()) or GetEntityHeading(GetPlayerPed(-1))) or error('expected heading should be a decimal/float number, received '..heading)
+	
+	ESX.Streaming.RequestModel(model)
+	
+	ESX.TriggerServerCallback('es_extended:ESX.OneSync.SpawnObject', function(netID)
+		while not NetworkDoesEntityExistWithNetworkId(netID) do Wait(100) end
+		if cb then
+			cb(NetToObj(netID))
+		end
+	end, model, coords, heading)
+end
+
+ESX.Onesync.SpawnVehicle = function(vehicle, coords, heading, cb)
+	local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
+	coords = type(coords) == 'vector3' and coords or type(coords) == 'table' and coords or error('expected xyz coordinates when spawning vehicle, received '..type(coords))
+	heading = math.type(heading) == 'float' and heading or heading == nil and (GetEntityHeading(ESX.PlayerData.ped) or GetEntityHeading(PlayerPedId()) or GetEntityHeading(GetPlayerPed(-1))) or error('expected heading should be a decimal/float number, received '..heading)
+	
+	ESX.Streaming.RequestModel(model)
+
+	ESX.TriggerServerCallback('es_extended:ESX.OneSync.SpawnVehicle', function(netID)
+		while not NetworkDoesEntityExistWithNetworkId(netID) do Wait(100) end
+		local veh = NetToVeh(netID)
+		SetNetworkIdCanMigrate(netID, true)
+		SetEntityAsMissionEntity(veh, true, false)
+		--SetVehicleHasBeenOwnedByPlayer(veh, true)
+		SetVehicleNeedsToBeHotwired(veh, false)
+		SetModelAsNoLongerNeeded(model)
+		SetVehRadioStation(veh, 'OFF')
+
+		RequestCollisionAtCoord(coords.x, coords.y, coords.z)
+		while not HasCollisionLoadedAroundEntity(veh) do
+			Wait(0)
+		end
+		if cb then
+			cb(veh)
+		end
+	end, model, coords, heading)
+end
+
+ESX.Onesync.SpawnPed = function(ped, coords, heading, cb)
+	local model = (type(ped) == 'number' and ped or GetHashKey(ped))
+	coords = type(coords) == 'vector3' and coords or type(coords) == 'table' and coords or error('expected xyz coordinates when spawning ped, received '..type(coords))
+	heading = math.type(heading) == 'float' and heading or heading == nil and (GetEntityHeading(ESX.PlayerData.ped) or GetEntityHeading(PlayerPedId()) or GetEntityHeading(GetPlayerPed(-1))) or error('expected heading should be a decimal/float number, received '..heading)
+	
+	ESX.Streaming.RequestModel(model)
+
+	ESX.TriggerServerCallback('es_extended:ESX.OneSync.SpawnPed', function(netID)
+		while not NetworkDoesEntityExistWithNetworkId(netID) do Wait(100) end
+		if cb then
+			cb(NetToPed(netID))
+		end
+	end, model, coords, heading)
+end
+
+ESX.Onesync.DeleteVehicle = function(vehicle, cb)
+	SetEntityAsMissionEntity(vehicle, false, true)
+	ESX.TriggerServerCallback('es_extended:ESX.OneSync.DeleteEntity', function(response)
+		if cb then
+			cb(response)
+		end
+	end, VehToNet(vehicle))
+end
+
+ESX.Onesync.DeleteObject = function(object, cb)
+	SetEntityAsMissionEntity(object, false, true)
+	ESX.TriggerServerCallback('es_extended:ESX.OneSync.DeleteEntity', function(response)
+		if cb then
+			cb(response)
+		end
+	end, ObjToNet(object))
 end
 
 RegisterNetEvent('esx:serverCallback', function(requestId, ...)
